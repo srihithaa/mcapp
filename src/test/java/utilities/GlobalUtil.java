@@ -61,7 +61,7 @@ public class GlobalUtil extends MobileKeywords {
 	static String clientEmail = "Email";
 	public static String result_FolderName = System.getProperty("user.dir") + "/target/cucumber-html-report";
 	public static TestLinkUtil testlinkapi;
-	//public static JiraUtil jiraapi;
+	// public static JiraUtil jiraapi;
 	public static String ErrorMsg;
 	public static Throwable e;
 
@@ -82,20 +82,17 @@ public class GlobalUtil extends MobileKeywords {
 	 */
 
 	public static AndroidDriver<AndroidElement> getMobileApp() {
-		capabilities.setCapability(CapabilityType.BROWSER_NAME, "");
-		capabilities.setCapability("deviceName", MobileKeywords.GetValue("ID"));
-		capabilities.setCapability("platformVersion", MobileKeywords.GetValue("Version"));
-		capabilities.setCapability("platformName", MobileKeywords.GetValue("platformName"));
-		capabilities.setCapability("automationName", MobileKeywords.GetValue("automationName"));
-		capabilities.setCapability("appPackage", MobileKeywords.GetValue("appPackage"));
-		capabilities.setCapability("appActivity", MobileKeywords.GetValue("appActivity"));
+		capabilities.setCapability("deviceName", HubConfigManager.deviceName);
+		capabilities.setCapability("platformVersion", HubConfigManager.platformVersion);
+		capabilities.setCapability("app", HubConfigManager.app);
+		capabilities.setCapability("appPackage", HubConfigManager.appPackage);
 		capabilities.setCapability("autoGrantPermissions", true);
 		capabilities.setCapability("autoAcceptAlerts", true);
 		capabilities.setCapability("disableWindowAnimation ", true);
-		capabilities.setCapability("app", System.getProperty("user.dir")+"\\"+MobileKeywords.GetValue("apkFilePath"));
 		try {
-			URL url = new URL("http://" + appium_ip_address + ":" + appium_port + "/wd/hub");
-
+			// URL url = new URL("http://" + appium_ip_address + ":" +
+			// appium_port + "/wd/hub");
+			URL url = new URL(HubConfigManager.appiumURL);
 			System.out.println(url);
 			while (2 > 1) {
 				Mdriver = new AndroidDriver<>(url, capabilities);
