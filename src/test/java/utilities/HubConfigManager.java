@@ -34,6 +34,10 @@ public class HubConfigManager {
 	public static String appPackage;
 
 	public void main() {
+		String seleniumPath = System.getProperty("user.dir") + "/lib/selenium-server-standalone-3.141.59.jar";
+		if (!new File(seleniumPath).exists())
+			downloadFileFromInternet("https://bit.ly/2TlkRyu", seleniumPath);
+		KeywordUtil.delay(5000);
 		startSeleniumGrid();
 		HubConfigManager.appiumURL = updateJSON();
 		KeywordUtil.delay(3000);
@@ -50,28 +54,21 @@ public class HubConfigManager {
 		excCommandNewWindow("appium --nodeconfig " + System.getProperty("user.dir") + "/lib/node1_Config.json");
 	}
 
-	public void downloadFileFromInternet(String fileURL) {
-		URL url;
+	public void downloadFileFromInternet(String fileURL, String filePathToSave) {
 		URLConnection con;
 		DataInputStream dis;
 		FileOutputStream fos;
 		byte[] fileData;
 		try {
-			url = new URL(fileURL); // File Location goes here
-			con = url.openConnection(); // open the url connection.
+			con = new URL(fileURL).openConnection();
 			dis = new DataInputStream(con.getInputStream());
 			fileData = new byte[con.getContentLength()];
-			for (int q = 0; q < fileData.length; q++) {
+			for (int q = 0; q < fileData.length; q++)
 				fileData[q] = dis.readByte();
-			}
-			dis.close(); // close the data input stream
-			fos = new FileOutputStream(new File("/Users/kfang/Documents/Download/file.pdf")); // FILE
-																								// Save
-																								// Location
-																								// goes
-																								// here
-			fos.write(fileData); // write out the file we want to save.
-			fos.close(); // close the output stream writer
+			dis.close();
+			fos = new FileOutputStream(new File(filePathToSave));
+			fos.write(fileData);
+			fos.close();
 		} catch (Exception m) {
 			System.out.println(m);
 		}
@@ -85,7 +82,13 @@ public class HubConfigManager {
 		JSONObject capsObj = (JSONObject) capsArrayRoot.get(0);
 		if (!capsObj.get("deviceName").toString().isEmpty())
 			capsObj.remove("deviceName");
-		capsObj.put("deviceName", readCmd("adb shell getprop ro.product.model"));
+		try {
+			capsObj.put("deviceName", readCmd("adb shell getprop ro.product.model"));
+		} catch (NullPointerException e) {
+			System.err.println(
+					"Looks like device is not connected/authorized. Please hook device to machine and retry....");
+			System.exit(0);
+		}
 		deviceName = (String) capsObj.get("deviceName");
 		if (!capsObj.get("platformVersion").toString().isEmpty())
 			capsObj.remove("platformVersion");
