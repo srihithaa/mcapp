@@ -1,16 +1,28 @@
 package utilities;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * Automated hub-node management class for plug and play connectivity of android
+ * device to selenium grid.
+ * 
+ * @author vidyasagar.mada
+ * @since Aug 1st 2019
+ */
 public class HubConfigManager {
 	int hubPort = 1221;
 	int nodePort = 4723;
@@ -22,7 +34,6 @@ public class HubConfigManager {
 	public static String appPackage;
 
 	public void main() {
-		// System.out.println(fileAsString()); // hookMobileNodeToGrid();
 		startSeleniumGrid();
 		HubConfigManager.appiumURL = updateJSON();
 		KeywordUtil.delay(3000);
@@ -39,8 +50,34 @@ public class HubConfigManager {
 		excCommandNewWindow("appium --nodeconfig " + System.getProperty("user.dir") + "/lib/node1_Config.json");
 	}
 
-	public String updateJSON() {
+	public void downloadFileFromInternet(String fileURL) {
+		URL url;
+		URLConnection con;
+		DataInputStream dis;
+		FileOutputStream fos;
+		byte[] fileData;
+		try {
+			url = new URL(fileURL); // File Location goes here
+			con = url.openConnection(); // open the url connection.
+			dis = new DataInputStream(con.getInputStream());
+			fileData = new byte[con.getContentLength()];
+			for (int q = 0; q < fileData.length; q++) {
+				fileData[q] = dis.readByte();
+			}
+			dis.close(); // close the data input stream
+			fos = new FileOutputStream(new File("/Users/kfang/Documents/Download/file.pdf")); // FILE
+																								// Save
+																								// Location
+																								// goes
+																								// here
+			fos.write(fileData); // write out the file we want to save.
+			fos.close(); // close the output stream writer
+		} catch (Exception m) {
+			System.out.println(m);
+		}
+	}
 
+	public String updateJSON() {
 		String appiumURL = null;
 		String fileJSON = fileAsString(System.getProperty("user.dir") + "/lib/defaultNode.json");
 		JSONObject root = new JSONObject(fileJSON);
@@ -106,6 +143,7 @@ public class HubConfigManager {
 				line = buf.readLine();
 			}
 			fileAsString = sb.toString();
+			buf.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -17,14 +17,11 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import io.appium.java_client.PerformsTouchActions;
-import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
+import io.appium.java_client.remote.MobileCapabilityType;
 //import jirautil.JiraUtil;
 import mobileutil.MobileKeywords;
 
@@ -60,7 +57,7 @@ public class GlobalUtil extends MobileKeywords {
 	static String clientFullName = "FullName";
 	static String clientEmail = "Email";
 	public static String result_FolderName = System.getProperty("user.dir") + "/target/cucumber-html-report";
-	public static TestLinkUtil testlinkapi;
+	// public static TestLinkUtil testlinkapi;
 	// public static JiraUtil jiraapi;
 	public static String ErrorMsg;
 	public static Throwable e;
@@ -72,14 +69,10 @@ public class GlobalUtil extends MobileKeywords {
 	public static final String PROPERTYAGENTKEY = "Agent";
 	public static final String PROPERTYNOTEKEY = "Note";
 	public static DesiredCapabilities capabilities = new DesiredCapabilities();
-	public static String appium_ip_address = mobileutil.MobileKeywords.GetValue("appium_ip_address");
-	public static String appium_port = mobileutil.MobileKeywords.GetValue("appium_port");
+	public static String appium_ip_address = mobileutil.MobileKeywords.getValue("appium_ip_address");
+	public static String appium_port = mobileutil.MobileKeywords.getValue("appium_port");
 
 	protected static final HashMap<String, String> popupCurrentData = new HashMap<String, String>();
-
-	/**
-	 * Get data and time stamp
-	 */
 
 	public static AndroidDriver<AndroidElement> getMobileApp() {
 		capabilities.setCapability("deviceName", HubConfigManager.deviceName);
@@ -90,8 +83,6 @@ public class GlobalUtil extends MobileKeywords {
 		capabilities.setCapability("autoAcceptAlerts", true);
 		capabilities.setCapability("disableWindowAnimation ", true);
 		try {
-			// URL url = new URL("http://" + appium_ip_address + ":" +
-			// appium_port + "/wd/hub");
 			URL url = new URL(HubConfigManager.appiumURL);
 			System.out.println(url);
 			while (2 > 1) {
@@ -104,11 +95,24 @@ public class GlobalUtil extends MobileKeywords {
 		return Mdriver;
 	}
 
-	public static boolean tap(String path, String type) {
-		WebElement element = (explicitWaitForElement(path, type));
-		TouchAction action = new TouchAction((PerformsTouchActions) Mdriver);
-		action.tap(element).perform();
-		return true;
+	public static AndroidDriver<AndroidElement> getMobileBrowser() {
+		capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "Chrome");
+		capabilities.setCapability("deviceName", HubConfigManager.deviceName);
+		capabilities.setCapability("platformVersion", HubConfigManager.platformVersion);
+		capabilities.setCapability("chromedriverExecutable",
+				System.getProperty("user.dir") + "/" + MobileKeywords.getValue("AndroidChromeDriverPath"));
+		capabilities.setCapability("autoGrantPermissions", true);
+		try {
+			URL url = new URL(HubConfigManager.appiumURL);
+			System.out.println(url);
+			while (2 > 1) {
+				Mdriver = new AndroidDriver<>(url, capabilities);
+				break;
+			}
+		} catch (MalformedURLException e) {
+			System.err.println("Unnable to launch browser in Android device.");
+		}
+		return Mdriver;
 	}
 
 	public static String getDateTime() {

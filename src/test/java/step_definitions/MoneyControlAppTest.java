@@ -1,12 +1,11 @@
 package step_definitions;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.swing.text.TabableView;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -14,16 +13,15 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
-import com.github.fge.jsonschema.library.Keyword;
 import com.relevantcodes.extentreports.LogStatus;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidElement;
-import io.appium.java_client.android.AndroidKeyCode;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
 import mcWebPages.MoneyControlAppPage;
 import mobileutil.MobileKeywords;
 import utilities.ExcelDataUtil;
@@ -33,7 +31,6 @@ import utilities.KeywordUtil;
 
 public class MoneyControlAppTest extends MobileKeywords {
 
-	
 	public static HashMap<String, String> dataMap = new HashMap<String, String>();
 
 	@Given("^User Open MoneyControl$")
@@ -49,15 +46,13 @@ public class MoneyControlAppTest extends MobileKeywords {
 	@When("^User Click on Menu$")
 	public void clickMenu() {
 		KeywordUtil.delay(2000);
-		if (GlobalUtil.isWebElementPresent(MoneyControlAppPage.OK, MoneyControlAppPage.type_xpath)) {
+		if (GlobalUtil.isWebElementPresent(MoneyControlAppPage.OK, MoneyControlAppPage.type_xpath))
 			GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.OK)).click();
-		}
 		MoneyControlAppPage.clickMenuTab();
 	}
 
 	@Then("^User Click on MyPortfolio$")
 	public void clickMyPortfolio() {
-
 		Assert.assertEquals(
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.myportfoliobutton)).getText(),
 				"My Portfolio", "My portfolio link is visible");
@@ -74,7 +69,6 @@ public class MoneyControlAppTest extends MobileKeywords {
 			RunCukesTest.logger.log(LogStatus.PASS,
 					HTMLReportUtil.passStringGreenColor("Login with facebook is displayed"));
 			MoneyControlAppPage.clickloginwithfacebook();
-
 		} catch (Exception e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
@@ -87,13 +81,11 @@ public class MoneyControlAppTest extends MobileKeywords {
 		try {
 			KeywordUtil.cucumberTagName = "Mobile";
 			dataMap = ExcelDataUtil.getTestDataWithTestCaseID("MoneyControl", arg1);
-
 		} catch (Throwable e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
 			Assert.fail(e.getMessage());
 		}
-
 	}
 
 	@And("^Read \"(.*)\" data from Excel file$")
@@ -101,12 +93,10 @@ public class MoneyControlAppTest extends MobileKeywords {
 		try {
 			KeywordUtil.cucumberTagName = "Mobile";
 			dataMap = ExcelDataUtil.getTestDataWithTestCaseID("MoneyControl", arg1);
-
 		} catch (Throwable e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
 			Assert.fail(e.getMessage());
-
 		}
 	}
 
@@ -115,30 +105,24 @@ public class MoneyControlAppTest extends MobileKeywords {
 		try {
 			KeywordUtil.cucumberTagName = "Mobile";
 			dataMap = ExcelDataUtil.getTestDataWithTestCaseID("MoneyControl", arg1);
-
 		} catch (Throwable e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
 			Assert.fail(e.getMessage());
 		}
-
 	}
+
 	@When("^Enter email, password and click login$")
 	public void loginwithEmailfromExcel() {
-
 		explicitWaitForElementforGivenTime(MoneyControlAppPage.emailoruserid, MoneyControlAppPage.type_xpath, 10);
 		GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.emailoruserid)).sendKeys(dataMap.get("Email"));
 		GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.emailpassword))
-		.sendKeys(dataMap.get("Password"));
-
-		// GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.emaillogin)).click();
-
+				.sendKeys(dataMap.get("Password"));
 	}
 
 	@And("^User enters facebook details and click login$")
 	public void loginwithfacebook() {
 		MoneyControlAppPage.do_facebook_login(dataMap.get("Email"), dataMap.get("Password"));
-
 	}
 
 	@And("^User enters Google details and click login$")
@@ -149,7 +133,6 @@ public class MoneyControlAppTest extends MobileKeywords {
 	@And("^User verifies login page and click on logout$")
 	public void verifyloginpage() {
 		MoneyControlAppPage.verify_loginpage(dataMap.get("Email"));
-
 	}
 
 	@And("^User Clicks on Login with google$")
@@ -161,7 +144,6 @@ public class MoneyControlAppTest extends MobileKeywords {
 			RunCukesTest.logger.log(LogStatus.PASS,
 					HTMLReportUtil.passStringGreenColor("Login with google is displayed"));
 			MoneyControlAppPage.clickgooglelogin();
-
 		} catch (Exception e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
@@ -203,15 +185,12 @@ public class MoneyControlAppTest extends MobileKeywords {
 		KeywordUtil.delay(2000);
 		explicitWaitForElementforGivenTime(MoneyControlAppPage.summary_option, MoneyControlAppPage.type_xpath, 10);
 		GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.summary_option)).click();
-
 		float total_investment = MoneyControlAppPage.user_verifies_investment_amounts();
-
 		KeywordUtil.delay(3000);
-
 		String networth = GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.Networth)).getText();
-		if (networth.contains(",")) {
+		if (networth.contains(","))
 			networth = networth.replace(",", "");
-		}
+
 		float total_networth = Float.parseFloat(networth);
 		System.out.println();
 		System.out.println("total networth is " + total_networth);
@@ -221,7 +200,6 @@ public class MoneyControlAppTest extends MobileKeywords {
 		} else {
 			System.out.println("Networth amount is not tallied with total of all the inverstments");
 		}
-
 	}
 
 	@Then("^User Click on MyWatchlist$")
@@ -233,7 +211,6 @@ public class MoneyControlAppTest extends MobileKeywords {
 			RunCukesTest.logger.log(LogStatus.PASS,
 					HTMLReportUtil.passStringGreenColor("My Watchlist link is visible"));
 			MoneyControlAppPage.clickmywatchlist();
-
 		} catch (Exception e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
@@ -244,9 +221,7 @@ public class MoneyControlAppTest extends MobileKeywords {
 	@And("^User Click on AddStocks$")
 	public void click_addstocks_mywatchlist() {
 		try {
-
 			MoneyControlAppPage.click_addstocks_symbol_mywatchlist();
-
 		} catch (Exception e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
@@ -265,7 +240,6 @@ public class MoneyControlAppTest extends MobileKeywords {
 		GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.stocks_option_in_watchlist)).click();
 		KeywordUtil.delay(2000);
 		MoneyControlAppPage.user_verifies_stocknames_watchlist(dataMap.get("StockName"));
-
 	}
 
 	@And("^User enters \"(.*)\" mutualfunds to watchlist$")
@@ -277,7 +251,6 @@ public class MoneyControlAppTest extends MobileKeywords {
 		try {
 			MoneyControlAppPage.enter_mfname_to_watchlist(dataMap.get("Mutualfunds"));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		KeywordUtil.delay(2000);
@@ -329,10 +302,8 @@ public class MoneyControlAppTest extends MobileKeywords {
 	@And("^User Click on Done button$")
 	public void click_done_mywatchlist() {
 		try {
-
 			MoneyControlAppPage.click_done_watchlist();
 			KeywordUtil.delay(1500);
-
 		} catch (Exception e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
@@ -353,11 +324,14 @@ public class MoneyControlAppTest extends MobileKeywords {
 		MoneyControlAppPage.user_verifies_stocknames_watchlist(dataMap.get("StockName"));
 
 		KeywordUtil.delay(2000);
-		/*GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.mutualfunds_option_in_watchlist)).click();
-		KeywordUtil.delay(2000);
-		MoneyControlAppPage.user_verifies_stocknames_watchlist(dataMap.get("Mutualfunds"));
-
-		KeywordUtil.delay(2000);*/
+		/*
+		 * GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.
+		 * mutualfunds_option_in_watchlist)).click(); KeywordUtil.delay(2000);
+		 * MoneyControlAppPage.user_verifies_stocknames_watchlist(dataMap.get(
+		 * "Mutualfunds"));
+		 * 
+		 * KeywordUtil.delay(2000);
+		 */
 		GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.commodities_option_in_watchlist)).click();
 		KeywordUtil.delay(2000);
 		MoneyControlAppPage.user_verifies_stocknames_watchlist(dataMap.get("Commodities"));
@@ -388,7 +362,6 @@ public class MoneyControlAppTest extends MobileKeywords {
 	public void user_click_on_News_tab() {
 		try {
 			MoneyControlAppPage.click_News_Tab();
-			//KeywordUtil.delay(2000);
 		} catch (Exception e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
@@ -398,16 +371,11 @@ public class MoneyControlAppTest extends MobileKeywords {
 
 	@And("^User moves to Opinion tab$")
 	public void user_moves_to_Opinion_tab() {
-
 		try {
-			//MoneyControlAppPage.click_Opinion_Tab();
-			/*TouchAction t=new TouchAction(GlobalUtil.getMDriver());
-			for(int i=0;i<=3;i++)
-			{
-			t.press(700, 1100).moveTo(480, 1100).release().perform();
-			KeywordUtil.delay(3000);
-			}*/
-			GlobalUtil.getMDriver().findElements(By.xpath("//*[@resource-id='com.divum.MoneyControl:id/tabs']/android.widget.LinearLayout/android.widget.TextView")).get(4).click();
+			GlobalUtil.getMDriver()
+					.findElements(By
+							.xpath("//*[@resource-id='com.divum.MoneyControl:id/tabs']/android.widget.LinearLayout/android.widget.TextView"))
+					.get(4).click();
 			KeywordUtil.delay(2000);
 		} catch (Exception e) {
 			GlobalUtil.e = e;
@@ -418,37 +386,24 @@ public class MoneyControlAppTest extends MobileKeywords {
 
 	@And("^Non Pro User reads a news with Pro symbol$")
 	public void user_reads_a_news_with_pro_symbol() {
-
 		KeywordUtil.delay(8000);
 		MoneyControlAppPage.opinion_get_news();
-		TouchAction ta = new TouchAction(GlobalUtil.getMDriver());
-
-		ta.press(500, 1600).moveTo(500, 1450).release().perform();
-
+		mobileSwipeTouchAction(500, 1600, 500, 1450, 1000);
 		MoneyControlAppPage.opinion_get_news();
-
-		ta.press(500, 1600).moveTo(500, 1450).release().perform();
-
+		mobileSwipeTouchAction(500, 1600, 500, 1450, 1000);
 		MoneyControlAppPage.opinion_get_news();
-
 	}
 
 	@And("^Pro User reads news with Pro symbol$")
 	public void pro_user_reads_news_with_pro_symbol() {
-
 		MoneyControlAppPage.pro_user_opinion_get_news();
-		TouchAction ta = new TouchAction(GlobalUtil.getMDriver());
-
 		KeywordUtil.delay(1000);
-		ta.press(500, 1600).moveTo(500, 1450).release().perform();
+		mobileSwipeTouchAction(500, 1600, 500, 1450, 1000);
 		MoneyControlAppPage.pro_user_opinion_get_news();
-
 		KeywordUtil.delay(1000);
-		ta.press(500, 1600).moveTo(500, 1450).release().perform();
+		mobileSwipeTouchAction(500, 1600, 500, 1450, 1000);
 		MoneyControlAppPage.pro_user_opinion_get_news();
-
 		KeywordUtil.delay(1000);
-
 	}
 
 	@And("^User accepts messages$")
@@ -509,27 +464,27 @@ public class MoneyControlAppTest extends MobileKeywords {
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 			LocalDateTime now = LocalDateTime.now();
 			System.out.println("app launching time is " + dtf.format(now));
-			
+
 			// RunCukesTest.logger.log(LogStatus.PASS,
 			// HTMLReportUtil.passStringGreenColor("before launch date"));
-			
+
 			String x = dtf.format(now);
 			System.out.println(
 					x.substring(x.length() - 5, x.length() - 3) + ":" + x.substring(x.length() - 2, x.length()));
 			int a = Integer.parseInt(x.substring(x.length() - 5, x.length() - 3));
-			
+
 			int a1 = Integer.parseInt(x.substring(x.length() - 2, x.length()));
 
 			KeywordUtil.delay(3000);
 			Assert.assertEquals(
 					GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.home_display)).getText(), "Home",
 					"MoneyControl app opened verified");
-			
+
 			MoneyControlAppPage.click_profileicon();
-			KeywordUtil.delay(50000); 
+			KeywordUtil.delay(50000);
 			MoneyControlAppPage.click_profileicon();
-			KeywordUtil.delay(50000); 
-			
+			KeywordUtil.delay(50000);
+
 			GlobalUtil.getMDriver().quit();
 			DateTimeFormatter dt = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 			LocalDateTime end = LocalDateTime.now();
@@ -540,10 +495,10 @@ public class MoneyControlAppTest extends MobileKeywords {
 			int b = Integer.parseInt(y.substring(y.length() - 5, y.length() - 3));
 
 			int b1 = Integer.parseInt(y.substring(y.length() - 2, y.length()));
-			//int c=b-a;
-			int c = (b+(b1/60)) - (a+(a1/60));
+			// int c=b-a;
+			int c = (b + (b1 / 60)) - (a + (a1 / 60));
 			int c1 = ((b * 60 + b1) - (a * 60 + a1));
-			c1=c1-(c*60);
+			c1 = c1 - (c * 60);
 
 			System.out.println("Time Dfference is " + c + " minutes " + c1 + " sec");
 
@@ -609,9 +564,7 @@ public class MoneyControlAppTest extends MobileKeywords {
 		GlobalUtil.getMDriver().lockDevice();
 		KeywordUtil.delay(5000);
 		GlobalUtil.getMDriver().unlockDevice();
-		TouchAction tact=new TouchAction(GlobalUtil.getMDriver());
-		tact.press(500, 1900).moveTo(500, 700).release().perform();
-
+		mobileSwipeTouchAction(500, 1900, 500, 700, 1000);
 	}
 
 	@Then("^User_Clicks on Markets_Tab$")
@@ -624,9 +577,9 @@ public class MoneyControlAppTest extends MobileKeywords {
 	@Then("^User_Click on Top_Gainers$")
 	public void user_Click_on_Top_Gainers() {
 		MoneyControlAppPage.topGainers();
-		GlobalUtil.getMDriver().swipe(383, 1090, 383, 900, 500);
+		MobileKeywords.mobileSwipeTouchAction(383, 1090, 383, 900, 500);
 		MoneyControlAppPage.topGainers();
-		GlobalUtil.getMDriver().swipe(383, 1090, 383, 900, 500);
+		MobileKeywords.mobileSwipeTouchAction(383, 1090, 383, 900, 500);
 		MoneyControlAppPage.topGainers();
 
 	}
@@ -640,9 +593,9 @@ public class MoneyControlAppTest extends MobileKeywords {
 	public void user_Click_on_Top_Losers() {
 
 		MoneyControlAppPage.ClickToplosers();
-		GlobalUtil.getMDriver().swipe(383, 1090, 383, 900, 500);
+		MobileKeywords.mobileSwipeTouchAction(383, 1090, 383, 900, 500);
 		MoneyControlAppPage.ClickToplosers();
-		GlobalUtil.getMDriver().swipe(383, 1090, 383, 900, 500);
+		MobileKeywords.mobileSwipeTouchAction(383, 1090, 383, 900, 500);
 		MoneyControlAppPage.ClickToplosers();
 
 	}
@@ -664,7 +617,7 @@ public class MoneyControlAppTest extends MobileKeywords {
 		userid1 = GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.portfolio_profile_useremail))
 				.getText();
 		System.out.println("Before App Background run Pro user ID is   :" + userid1);
-		GlobalUtil.getMDriver().runAppInBackground(30);
+		GlobalUtil.getMDriver().runAppInBackground(Duration.ofSeconds(30));
 		Thread.sleep(5000);
 
 	}
@@ -783,7 +736,7 @@ public class MoneyControlAppTest extends MobileKeywords {
 
 			}
 		}
-		//MoneyControlAppPage.swipeVerticalBottom2();
+		// MoneyControlAppPage.swipeVerticalBottom2();
 		System.out.println("swipe done for Commodities And Currencies visibility");
 		MoneyControlAppPage.commoditiesAndCurrencies();
 
@@ -803,7 +756,7 @@ public class MoneyControlAppTest extends MobileKeywords {
 
 			}
 		}
-		//MoneyControlAppPage.swipeVerticalBottom2();
+		// MoneyControlAppPage.swipeVerticalBottom2();
 		System.out.println("swipe done for Commodities And Currencies visibility");
 		MoneyControlAppPage.commoditiesAndCurrencies();
 		Thread.sleep(2000);
@@ -836,9 +789,9 @@ public class MoneyControlAppTest extends MobileKeywords {
 	public void user_checks_NonProuser_Adds() throws Throwable {
 		Thread.sleep(8000);
 
-		//System.out.println("driver collect the Adds");
+		// System.out.println("driver collect the Adds");
 		List<AndroidElement> list = GlobalUtil.getMDriver().findElements(By.xpath(MoneyControlAppPage.NonproAdds));
-		//System.out.println(list.size());
+		// System.out.println(list.size());
 
 		String x = "";
 		for (int j = 0; j < list.size(); j++) {
@@ -912,8 +865,7 @@ public class MoneyControlAppTest extends MobileKeywords {
 	@Then("^User verifies Notifications$")
 	public void user_verifies_Notifications() throws Throwable {
 		MoneyControlAppPage.Pushnotifications();
-		TouchAction tact=new TouchAction(GlobalUtil.getMDriver());
-		tact.press(500, 1900).moveTo(500, 700).release().perform();
+		MobileKeywords.mobileSwipeTouchAction(500, 1900, 500, 700, 1000);
 	}
 
 	@Then("^User click on Active by value$")
@@ -951,7 +903,7 @@ public class MoneyControlAppTest extends MobileKeywords {
 
 	@Given("^User_switch to ET stock Appp$")
 	public void etApp() throws Throwable {
-		GlobalUtil.getMDriver().pressKeyCode(AndroidKeyCode.HOME);
+		GlobalUtil.getMDriver().pressKey(new KeyEvent(AndroidKey.HOME));
 		System.out.println("Back Home Done");
 		MoneyControlAppPage.switchToEtApp();
 
@@ -983,119 +935,125 @@ public class MoneyControlAppTest extends MobileKeywords {
 		MoneyControlAppPage.mcNseEtComapreStockPercentage();
 	}
 
-	//////************** New Test Cases************************///////////////////////////////////////////////////
+	////// ************** New Test
+	////// Cases************************///////////////////////////////////////////////////
 
 	@When("^User clicks skips next option$")
-	public void user_clicks_skip()
-	{
-		TouchAction t=new TouchAction(GlobalUtil.getMDriver());
-		for(int i=0;i<13;i++)
-		{
-			t.tap(520,125).perform();
+	public void user_clicks_skip() {
+		for (int i = 0; i < 13; i++) {
+			mobileTap(520, 125);
 			KeywordUtil.delay(800);
 		}
-		//KeywordUtil.delay(6000);
-
 	}
 
 	@And("^User goes to TopNews section in News tab$")
-	public void user_goes_to_topnews_section_in_news_tab()
-	{
+	public void user_goes_to_topnews_section_in_news_tab() {
 		MoneyControlAppPage.click_News_Tab();
 		KeywordUtil.delay(2000);
 	}
+
 	@And("^User collects top 5 news from TopNews section$")
-	public void user_collects_top5news_from_TopNews_section()
-	{
+	public void user_collects_top5news_from_TopNews_section() {
 		MoneyControlAppPage.read_top5news_in_topNews();
 
 	}
+
 	@And("^User goes to Homepage$")
-	public void user_goes_to_homepage()
-	{
+	public void user_goes_to_homepage() {
 		MoneyControlAppPage.go_to_home();
 	}
 
 	@And("^User checks for the top 5 news headlines in Homepage$")
-	public void user_checks_for_top5news_in_homepage()
-	{
+	public void user_checks_for_top5news_in_homepage() {
 		MoneyControlAppPage.user_checks_for_top5news_in_homepage();
 	}
 
 	@And("^User checks for the top 5 news time in Homepage$")
-	public void user_checks_for_top5news_time_in_homepage()
-	{
+	public void user_checks_for_top5news_time_in_homepage() {
 		MoneyControlAppPage.user_checks_for_top5news_time_in_homepage();
 	}
+
 	@And("^User verifies if the news uploaded with in 3 hrs$")
-	public void user_verifies_if_the_news_uploaded_within_3hrs()
-	{
+	public void user_verifies_if_the_news_uploaded_within_3hrs() {
 		MoneyControlAppPage.user_verifies_news_time();
 	}
+
 	@And("^User clicks on TopNews in Homepage$")
-	public void user_clicks_on_TopNews_in_homepage()
-	{
+	public void user_clicks_on_TopNews_in_homepage() {
 		MoneyControlAppPage.click_on_TopNews_homepage();
 	}
+
 	@Then("^User verifies if TopNews list page is triggered$")
-	public void user_verifies_if_topnews_list_page_triggered()
-	{
+	public void user_verifies_if_topnews_list_page_triggered() {
 		MoneyControlAppPage.topnews_page_triggered();
 	}
 
 	@And("^User goes to Indices section in Homepage$")
-	public void user_goes_to_indices_section_in_homepage()
-	{
+	public void user_goes_to_indices_section_in_homepage() {
 		size = GlobalUtil.getMDriver().manage().window().getSize();
 		int starty = (int) (size.height * 0.70);
 		int endy = (int) (size.height * 0.10);
 		int startx = size.width / 2;
-		GlobalUtil.getMDriver().swipe(startx, starty, startx, endy, 1000);
+		MobileKeywords.mobileSwipeTouchAction(startx, starty, startx, endy, 1000);
 	}
+
 	@And("^User checks Indian indices and Global indices display$")
-	public void user_checks_indian_and_global_indices()
-	{
-		List<AndroidElement> indian_indices_list=GlobalUtil.getMDriver().findElements(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup"));
-		System.out.println("Indian indices list in home page is "+indian_indices_list.size());
-		if(indian_indices_list.size()-1==4)
-		{
+	public void user_checks_indian_and_global_indices() {
+		List<AndroidElement> indian_indices_list = GlobalUtil.getMDriver().findElements(By.xpath(
+				"//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup"));
+		System.out.println("Indian indices list in home page is " + indian_indices_list.size());
+		if (indian_indices_list.size() - 1 == 4) {
 			System.out.println("4 Indian indices are diplayed");
 		}
-		List<AndroidElement> global_indices_list=GlobalUtil.getMDriver().findElements(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup"));
-		System.out.println("Global indices list in home page is "+global_indices_list.size());
-		if(global_indices_list.size()-1==4)
-		{
+		List<AndroidElement> global_indices_list = GlobalUtil.getMDriver().findElements(By.xpath(
+				"//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup"));
+		System.out.println("Global indices list in home page is " + global_indices_list.size());
+		if (global_indices_list.size() - 1 == 4) {
 			System.out.println("4 Global indices are diplayed");
 		}
 
 	}
-	String indian_4_indices_names[]=new String[4];
-	String indian_4_indices_dateTime[]=new String[4];
-	String indian_4_indices_values[]=new String[4];
-	String indian_4_indices_percentages[]=new String[4];
 
-	String global_4_indices_names[]=new String[4];
-	String global_4_indices_dateTime[]=new String[4];
-	String global_4_indices_values[]=new String[4];
-	String global_4_indices_percentages[]=new String[4];
+	String indian_4_indices_names[] = new String[4];
+	String indian_4_indices_dateTime[] = new String[4];
+	String indian_4_indices_values[] = new String[4];
+	String indian_4_indices_percentages[] = new String[4];
+
+	String global_4_indices_names[] = new String[4];
+	String global_4_indices_dateTime[] = new String[4];
+	String global_4_indices_values[] = new String[4];
+	String global_4_indices_percentages[] = new String[4];
 
 	@And("^User gets indices values$")
-	public void user_gets_indices_values()
-	{
-		for(int i=0;i<4;i++)
-		{
-			indian_4_indices_names[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"']/android.widget.RelativeLayout/android.widget.TextView [@index='0']")).getText();
-			//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='0']/android.widget.RelativeLayout/android.widget.TextView[@index='0']
-			System.out.println("indian index name is "+indian_4_indices_names[i]);
+	public void user_gets_indices_values() {
+		for (int i = 0; i < 4; i++) {
+			indian_4_indices_names[i] = GlobalUtil.getMDriver()
+					.findElement(By
+							.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+									+ i + "']/android.widget.RelativeLayout/android.widget.TextView [@index='0']"))
+					.getText();
+			// android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='0']/android.widget.RelativeLayout/android.widget.TextView[@index='0']
+			System.out.println("indian index name is " + indian_4_indices_names[i]);
 			KeywordUtil.delay(2000);
-			indian_4_indices_dateTime[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"']/android.widget.RelativeLayout/android.widget.TextView [@index='2']")).getText();
-			System.out.println("indian index dateTime is "+indian_4_indices_dateTime[i]);
+			indian_4_indices_dateTime[i] = GlobalUtil.getMDriver()
+					.findElement(By
+							.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+									+ i + "']/android.widget.RelativeLayout/android.widget.TextView [@index='2']"))
+					.getText();
+			System.out.println("indian index dateTime is " + indian_4_indices_dateTime[i]);
 			KeywordUtil.delay(2000);
-			indian_4_indices_values[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"']/android.widget.LinearLayout[@index='2']/android.widget.TextView")).getText();
-			System.out.println("indian index value is "+indian_4_indices_values[i]);
+			indian_4_indices_values[i] = GlobalUtil.getMDriver()
+					.findElement(By
+							.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+									+ i + "']/android.widget.LinearLayout[@index='2']/android.widget.TextView"))
+					.getText();
+			System.out.println("indian index value is " + indian_4_indices_values[i]);
 			KeywordUtil.delay(2000);
-			indian_4_indices_percentages[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"']/android.widget.LinearLayout[@index='3']/android.widget.TextView[@index='1']")).getText();
-			System.out.println("indian index percentage is "+indian_4_indices_percentages[i]);
+			indian_4_indices_percentages[i] = GlobalUtil.getMDriver().findElement(By
+					.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+							+ i + "']/android.widget.LinearLayout[@index='3']/android.widget.TextView[@index='1']"))
+					.getText();
+			System.out.println("indian index percentage is " + indian_4_indices_percentages[i]);
 			KeywordUtil.delay(2000);
 			System.out.println();
 		}
@@ -1106,50 +1064,162 @@ public class MoneyControlAppTest extends MobileKeywords {
 		int y = (int) (height * 0.70);
 		int startx = (int) (width * 0.80);
 		int endx = (int) (width * 0.30);
-		GlobalUtil.getMDriver().swipe(startx, y, endx, y, 1000);
+		MobileKeywords.mobileSwipeTouchAction(startx, y, endx, y, 1000);
 
 		KeywordUtil.delay(2000);
-		for(int i=0;i<4;i++)
-		{
-			global_4_indices_names[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"']/android.widget.RelativeLayout/android.widget.TextView [@index='0']")).getText();
-			System.out.println("global index name is "+global_4_indices_names[i]);
+		for (int i = 0; i < 4; i++) {
+			global_4_indices_names[i] = GlobalUtil.getMDriver()
+					.findElement(By
+							.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+									+ i + "']/android.widget.RelativeLayout/android.widget.TextView [@index='0']"))
+					.getText();
+			System.out.println("global index name is " + global_4_indices_names[i]);
 			KeywordUtil.delay(2000);
-			global_4_indices_dateTime[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"']/android.widget.RelativeLayout/android.widget.TextView [@index='2']")).getText();
-			System.out.println("global index dateTime is "+global_4_indices_dateTime[i]);
+			global_4_indices_dateTime[i] = GlobalUtil.getMDriver()
+					.findElement(By
+							.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+									+ i + "']/android.widget.RelativeLayout/android.widget.TextView [@index='2']"))
+					.getText();
+			System.out.println("global index dateTime is " + global_4_indices_dateTime[i]);
 			KeywordUtil.delay(2000);
-			global_4_indices_values[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"']/android.widget.LinearLayout[@index='2']/android.widget.TextView")).getText();
-			System.out.println("global index value is "+global_4_indices_values[i]);
+			global_4_indices_values[i] = GlobalUtil.getMDriver()
+					.findElement(By
+							.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+									+ i + "']/android.widget.LinearLayout[@index='2']/android.widget.TextView"))
+					.getText();
+			System.out.println("global index value is " + global_4_indices_values[i]);
 			KeywordUtil.delay(2000);
-			global_4_indices_percentages[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"']/android.widget.LinearLayout[@index='3']/android.widget.TextView[@index='1']")).getText();
-			System.out.println("global index percentage is "+global_4_indices_percentages[i]);
+			global_4_indices_percentages[i] = GlobalUtil.getMDriver().findElement(By
+					.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+							+ i + "']/android.widget.LinearLayout[@index='3']/android.widget.TextView[@index='1']"))
+					.getText();
+			System.out.println("global index percentage is " + global_4_indices_percentages[i]);
 			KeywordUtil.delay(2000);
 			System.out.println();
 		}
 
 	}
-	
+
 	@And("^User gets indices values for New App$")
-	public void user_gets_indices_values_new_app()
-	{
+	public void user_gets_indices_values_new_app() {
 		System.out.println("start");
 		KeywordUtil.delay(3000);
-		/*for(int i=0;i<4;i++)
-		{
-			indian_4_indices_names[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']/android.widget.RelativeLayout/android.widget.TextView [@index='0'][contains(@content-desc,'stockname')]")).getText();
-			//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='0']/android.widget.RelativeLayout/android.widget.TextView[@index='0']
-			System.out.println("indian index name is "+indian_4_indices_names[i]);
-			//KeywordUtil.delay(2000);
-			indian_4_indices_dateTime[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']/android.widget.RelativeLayout/android.widget.TextView [@index='2'][contains(@content-desc,'date')]")).getText();
-			System.out.println("indian index dateTime is "+indian_4_indices_dateTime[i]);
-			//KeywordUtil.delay(2000);
-			indian_4_indices_values[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']/android.widget.LinearLayout[@index='2']/android.widget.TextView[contains(@content-desc,'amount')]")).getText();
-			System.out.println("indian index value is "+indian_4_indices_values[i]);
-			//KeywordUtil.delay(2000);
-			indian_4_indices_percentages[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']/android.widget.LinearLayout[@index='3']/android.widget.TextView[@index='1'][contains(@content-desc,'changepercent')]")).getText();
-			System.out.println("indian index percentage is "+indian_4_indices_percentages[i]);
-			//KeywordUtil.delay(2000);
-			System.out.println();
-		}
+		/*
+		 * for(int i=0;i<4;i++) {
+		 * indian_4_indices_names[i]=GlobalUtil.getMDriver().findElement(By.
+		 * xpath(
+		 * "//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+		 * +i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)
+		 * +"']/android.widget.RelativeLayout/android.widget.TextView [@index='0'][contains(@content-desc,'stockname')]"
+		 * )).getText();
+		 * //android.support.v7.widget.RecyclerView/android.view.ViewGroup[@
+		 * index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index=
+		 * '0']/android.widget.RelativeLayout/android.widget.TextView[@index='0'
+		 * ]
+		 * System.out.println("indian index name is "+indian_4_indices_names[i])
+		 * ; //KeywordUtil.delay(2000);
+		 * indian_4_indices_dateTime[i]=GlobalUtil.getMDriver().findElement(By.
+		 * xpath(
+		 * "//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+		 * +i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)
+		 * +"']/android.widget.RelativeLayout/android.widget.TextView [@index='2'][contains(@content-desc,'date')]"
+		 * )).getText(); System.out.println("indian index dateTime is "
+		 * +indian_4_indices_dateTime[i]); //KeywordUtil.delay(2000);
+		 * indian_4_indices_values[i]=GlobalUtil.getMDriver().findElement(By.
+		 * xpath(
+		 * "//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+		 * +i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+
+		 * "']/android.widget.LinearLayout[@index='2']/android.widget.TextView[contains(@content-desc,'amount')]"
+		 * )).getText();
+		 * System.out.println("indian index value is "+indian_4_indices_values[i
+		 * ]); //KeywordUtil.delay(2000);
+		 * indian_4_indices_percentages[i]=GlobalUtil.getMDriver().findElement(
+		 * By.xpath(
+		 * "//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+		 * +i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+
+		 * "']/android.widget.LinearLayout[@index='3']/android.widget.TextView[@index='1'][contains(@content-desc,'changepercent')]"
+		 * )).getText(); System.out.println("indian index percentage is "
+		 * +indian_4_indices_percentages[i]); //KeywordUtil.delay(2000);
+		 * System.out.println(); }
+		 * 
+		 * Dimension dim = GlobalUtil.getMDriver().manage().window().getSize();
+		 * int height = dim.getHeight(); int width = dim.getWidth(); int y =
+		 * (int) (height * 0.70); int startx = (int) (width * 0.80); int endx =
+		 * (int) (width * 0.30); GlobalUtil.getMDriver().swipe(startx, y, endx,
+		 * y, 1000);
+		 * 
+		 * KeywordUtil.delay(2000); for(int i=0;i<4;i++) {
+		 * global_4_indices_names[i]=GlobalUtil.getMDriver().findElement(By.
+		 * xpath(
+		 * "//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+		 * +i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)
+		 * +"']/android.widget.RelativeLayout/android.widget.TextView [@index='0'][contains(@content-desc,'stockname')]"
+		 * )).getText();
+		 * System.out.println("global index name is "+global_4_indices_names[i])
+		 * ; //KeywordUtil.delay(2000);
+		 * global_4_indices_dateTime[i]=GlobalUtil.getMDriver().findElement(By.
+		 * xpath(
+		 * "//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+		 * +i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)
+		 * +"']/android.widget.RelativeLayout/android.widget.TextView [@index='2'][contains(@content-desc,'date')]"
+		 * )).getText(); System.out.println("global index dateTime is "
+		 * +global_4_indices_dateTime[i]); //KeywordUtil.delay(2000);
+		 * global_4_indices_values[i]=GlobalUtil.getMDriver().findElement(By.
+		 * xpath(
+		 * "//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+		 * +i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+
+		 * "']/android.widget.LinearLayout[@index='2']/android.widget.TextView[contains(@content-desc,'amount')]"
+		 * )).getText();
+		 * System.out.println("global index value is "+global_4_indices_values[i
+		 * ]); //KeywordUtil.delay(2000);
+		 * global_4_indices_percentages[i]=GlobalUtil.getMDriver().findElement(
+		 * By.xpath(
+		 * "//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+		 * +i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+
+		 * "']/android.widget.LinearLayout[@index='3']/android.widget.TextView[@index='1'][contains(@content-desc,'changepercent')]"
+		 * )).getText(); System.out.println("global index percentage is "
+		 * +global_4_indices_percentages[i]); //KeywordUtil.delay(2000);
+		 * System.out.println(); }
+		 */
+
+		/*
+		 * for(int i=0;i<4;i++) {
+		 * indian_4_indices_names[i]=GlobalUtil.getMDriver().findElement(By.
+		 * xpath(
+		 * "//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+		 * +i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)
+		 * +"']/android.widget.RelativeLayout/android.widget.TextView [@index='0'][contains(@content-desc,'stockname')]"
+		 * )).getText();
+		 * //android.support.v7.widget.RecyclerView/android.view.ViewGroup[@
+		 * index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index=
+		 * '0']/android.widget.RelativeLayout/android.widget.TextView[@index='0'
+		 * ]
+		 * System.out.println("indian index name is "+indian_4_indices_names[i])
+		 * ; //KeywordUtil.delay(2000);
+		 * indian_4_indices_dateTime[i]=GlobalUtil.getMDriver().findElement(By.
+		 * xpath(
+		 * "//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+		 * +i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)
+		 * +"']/android.widget.RelativeLayout/android.widget.TextView [@index='2'][contains(@content-desc,'date')]"
+		 * )).getText(); System.out.println("indian index dateTime is "
+		 * +indian_4_indices_dateTime[i]); //KeywordUtil.delay(2000);
+		 * indian_4_indices_values[i]=GlobalUtil.getMDriver().findElement(By.
+		 * xpath(
+		 * "//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+		 * +i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+
+		 * "']/android.widget.LinearLayout[@index='2']/android.widget.TextView[contains(@content-desc,'amount')]"
+		 * )).getText();
+		 * System.out.println("indian index value is "+indian_4_indices_values[i
+		 * ]); //KeywordUtil.delay(2000);
+		 * indian_4_indices_percentages[i]=GlobalUtil.getMDriver().findElement(
+		 * By.xpath(
+		 * "//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"
+		 * +i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+
+		 * "']/android.widget.LinearLayout[@index='3']/android.widget.TextView[@index='1'][contains(@content-desc,'changepercent')]"
+		 * )).getText(); System.out.println("indian index percentage is "
+		 * +indian_4_indices_percentages[i]); //KeywordUtil.delay(2000);
+		 * System.out.println(); }
+		 */
 
 		Dimension dim = GlobalUtil.getMDriver().manage().window().getSize();
 		int height = dim.getHeight();
@@ -1157,115 +1227,89 @@ public class MoneyControlAppTest extends MobileKeywords {
 		int y = (int) (height * 0.70);
 		int startx = (int) (width * 0.80);
 		int endx = (int) (width * 0.30);
-		GlobalUtil.getMDriver().swipe(startx, y, endx, y, 1000);
-
+		MobileKeywords.mobileSwipeTouchAction(startx, y, endx, y, 1000);
 		KeywordUtil.delay(2000);
-		for(int i=0;i<4;i++)
-		{
-			global_4_indices_names[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']/android.widget.RelativeLayout/android.widget.TextView [@index='0'][contains(@content-desc,'stockname')]")).getText();
-			System.out.println("global index name is "+global_4_indices_names[i]);
-			//KeywordUtil.delay(2000);
-			global_4_indices_dateTime[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']/android.widget.RelativeLayout/android.widget.TextView [@index='2'][contains(@content-desc,'date')]")).getText();
-			System.out.println("global index dateTime is "+global_4_indices_dateTime[i]);
-			//KeywordUtil.delay(2000);
-			global_4_indices_values[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']/android.widget.LinearLayout[@index='2']/android.widget.TextView[contains(@content-desc,'amount')]")).getText();
-			System.out.println("global index value is "+global_4_indices_values[i]);
-			//KeywordUtil.delay(2000);
-			global_4_indices_percentages[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']/android.widget.LinearLayout[@index='3']/android.widget.TextView[@index='1'][contains(@content-desc,'changepercent')]")).getText();
-			System.out.println("global index percentage is "+global_4_indices_percentages[i]);
-			//KeywordUtil.delay(2000);
-			System.out.println();
-		}*/
-		
-		/*for(int i=0;i<4;i++)
-		{
-			indian_4_indices_names[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']/android.widget.RelativeLayout/android.widget.TextView [@index='0'][contains(@content-desc,'stockname')]")).getText();
-			//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.LinearLayout/android.view.ViewGroup[@index='0']/android.widget.RelativeLayout/android.widget.TextView[@index='0']
-			System.out.println("indian index name is "+indian_4_indices_names[i]);
-			//KeywordUtil.delay(2000);
-			indian_4_indices_dateTime[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']/android.widget.RelativeLayout/android.widget.TextView [@index='2'][contains(@content-desc,'date')]")).getText();
-			System.out.println("indian index dateTime is "+indian_4_indices_dateTime[i]);
-			//KeywordUtil.delay(2000);
-			indian_4_indices_values[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']/android.widget.LinearLayout[@index='2']/android.widget.TextView[contains(@content-desc,'amount')]")).getText();
-			System.out.println("indian index value is "+indian_4_indices_values[i]);
-			//KeywordUtil.delay(2000);
-			indian_4_indices_percentages[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='0']/android.widget.LinearLayout/android.view.ViewGroup[@index='"+i+"'][@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']/android.widget.LinearLayout[@index='3']/android.widget.TextView[@index='1'][contains(@content-desc,'changepercent')]")).getText();
-			System.out.println("indian index percentage is "+indian_4_indices_percentages[i]);
-			//KeywordUtil.delay(2000);
-			System.out.println();
-		}*/
-
-		Dimension dim = GlobalUtil.getMDriver().manage().window().getSize();
-		int height = dim.getHeight();
-		int width = dim.getWidth();
-		int y = (int) (height * 0.70);
-		int startx = (int) (width * 0.80);
-		int endx = (int) (width * 0.30);
-		GlobalUtil.getMDriver().swipe(startx, y, endx, y, 1000);
-
-		KeywordUtil.delay(2000);
-		for(int i=0;i<4;i++)
-		{
-			global_4_indices_names[i]=GlobalUtil.getMDriver().findElement(By.xpath("//*[@resource-id='com.divum.MoneyControl.debug:id/rv_linear_tray']/android.view.ViewGroup[@index='1']//*[@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']//*[contains(@content-desc,'stockname')]")).getText();
-			System.out.println("global index name is "+global_4_indices_names[i]);
-			//KeywordUtil.delay(2000);
-			global_4_indices_dateTime[i]=GlobalUtil.getMDriver().findElement(By.xpath("//*[@resource-id='com.divum.MoneyControl.debug:id/rv_linear_tray']/android.view.ViewGroup[@index='1']//*[@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']//*[contains(@content-desc,'date')]")).getText();
-			System.out.println("global index dateTime is "+global_4_indices_dateTime[i]);
-			//KeywordUtil.delay(2000);
-			global_4_indices_values[i]=GlobalUtil.getMDriver().findElement(By.xpath("//*[@resource-id='com.divum.MoneyControl.debug:id/rv_linear_tray']/android.view.ViewGroup[@index='1']//*[@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']//*[contains(@content-desc,'amount')]")).getText();
-			System.out.println("global index value is "+global_4_indices_values[i]);
-			//KeywordUtil.delay(2000);
-			global_4_indices_percentages[i]=GlobalUtil.getMDriver().findElement(By.xpath("//*[@resource-id='com.divum.MoneyControl.debug:id/rv_linear_tray']/android.view.ViewGroup[@index='1']//*[@resource-id='com.divum.MoneyControl.debug:id/data_"+(i+1)+"']//*[contains(@content-desc,'changepercent')]")).getText();
-			System.out.println("global index percentage is "+global_4_indices_percentages[i]);
-			//KeywordUtil.delay(2000);
+		for (int i = 0; i < 4; i++) {
+			global_4_indices_names[i] = GlobalUtil.getMDriver()
+					.findElement(By
+							.xpath("//*[@resource-id='com.divum.MoneyControl.debug:id/rv_linear_tray']/android.view.ViewGroup[@index='1']//*[@resource-id='com.divum.MoneyControl.debug:id/data_"
+									+ (i + 1) + "']//*[contains(@content-desc,'stockname')]"))
+					.getText();
+			System.out.println("global index name is " + global_4_indices_names[i]);
+			// KeywordUtil.delay(2000);
+			global_4_indices_dateTime[i] = GlobalUtil.getMDriver()
+					.findElement(By
+							.xpath("//*[@resource-id='com.divum.MoneyControl.debug:id/rv_linear_tray']/android.view.ViewGroup[@index='1']//*[@resource-id='com.divum.MoneyControl.debug:id/data_"
+									+ (i + 1) + "']//*[contains(@content-desc,'date')]"))
+					.getText();
+			System.out.println("global index dateTime is " + global_4_indices_dateTime[i]);
+			// KeywordUtil.delay(2000);
+			global_4_indices_values[i] = GlobalUtil.getMDriver()
+					.findElement(By
+							.xpath("//*[@resource-id='com.divum.MoneyControl.debug:id/rv_linear_tray']/android.view.ViewGroup[@index='1']//*[@resource-id='com.divum.MoneyControl.debug:id/data_"
+									+ (i + 1) + "']//*[contains(@content-desc,'amount')]"))
+					.getText();
+			System.out.println("global index value is " + global_4_indices_values[i]);
+			// KeywordUtil.delay(2000);
+			global_4_indices_percentages[i] = GlobalUtil.getMDriver()
+					.findElement(By
+							.xpath("//*[@resource-id='com.divum.MoneyControl.debug:id/rv_linear_tray']/android.view.ViewGroup[@index='1']//*[@resource-id='com.divum.MoneyControl.debug:id/data_"
+									+ (i + 1) + "']//*[contains(@content-desc,'changepercent')]"))
+					.getText();
+			System.out.println("global index percentage is " + global_4_indices_percentages[i]);
+			// KeywordUtil.delay(2000);
 			System.out.println();
 		}
-		
 
 	}
+
 	@And("^User switches to Investing app$")
-	public void user_switches_to_investing_app()
-	{
-		GlobalUtil.getMDriver().pressKeyCode(AndroidKeyCode.HOME);
+	public void user_switches_to_investing_app() {
+		GlobalUtil.getMDriver().pressKey(new KeyEvent(AndroidKey.HOME));
 		MoneyControlAppPage.open_investing_app();
 		KeywordUtil.delay(3000);
 	}
 
-	String indian_index_value_IA[]=new String[4];
-	String indian_index_percentage_IA[]=new String[4];
-	String global_index_value_IA[]=new String[4];
-	String global_index_percentage_IA[]=new String[4];
+	String indian_index_value_IA[] = new String[4];
+	String indian_index_percentage_IA[] = new String[4];
+	String global_index_value_IA[] = new String[4];
+	String global_index_percentage_IA[] = new String[4];
 
-	String indian_4_indices_names1[]={"NIFTY Smallcap 100","S&P BSE SENSEX","NIFTY  50","NIFTY Midcap 100"};
-	String global_4_indices_names1[]={"SGX Nifty","KOSPI","Shanghai Composite","Straits Times"};
+	String indian_4_indices_names1[] = { "NIFTY Smallcap 100", "S&P BSE SENSEX", "NIFTY  50", "NIFTY Midcap 100" };
+	String global_4_indices_names1[] = { "SGX Nifty", "KOSPI", "Shanghai Composite", "Straits Times" };
 
 	@And("^User verifies the indices values and percentages in Investing app$")
-	public void user_verifies_indices_in_Investingapp()
-	{
-		for(int i=0;i<4;i++)
-		{
+	public void user_verifies_indices_in_Investingapp() {
+		for (int i = 0; i < 4; i++) {
 			click(MoneyControlAppPage.search_in_Investing_app, MoneyControlAppPage.type_xpath);
-			KeywordUtil.inputText(By.xpath(MoneyControlAppPage.enter_index_in_Investing_app), indian_4_indices_names1[i] , "user entered index name");
+			KeywordUtil.inputText(By.xpath(MoneyControlAppPage.enter_index_in_Investing_app),
+					indian_4_indices_names1[i], "user entered index name");
 			KeywordUtil.delay(5000);
-			click("//android.widget.ListView/android.widget.RelativeLayout[@index='0']", MoneyControlAppPage.type_xpath);
-			indian_index_value_IA[i]=KeywordUtil.getElementText(By.xpath(MoneyControlAppPage.get_index_value_in_Investing_app));
+			click("//android.widget.ListView/android.widget.RelativeLayout[@index='0']",
+					MoneyControlAppPage.type_xpath);
+			indian_index_value_IA[i] = KeywordUtil
+					.getElementText(By.xpath(MoneyControlAppPage.get_index_value_in_Investing_app));
 			System.out.println(indian_index_value_IA[i]);
-			indian_index_percentage_IA[i]=KeywordUtil.getElementText(By.xpath(MoneyControlAppPage.get_index_percentage_in_Investing_app));
+			indian_index_percentage_IA[i] = KeywordUtil
+					.getElementText(By.xpath(MoneyControlAppPage.get_index_percentage_in_Investing_app));
 			System.out.println(indian_index_percentage_IA[i]);
 			GlobalUtil.getMDriver().navigate().back();
 			KeywordUtil.delay(1000);
 			click(MoneyControlAppPage.back_in_Investing_app, MoneyControlAppPage.type_xpath);
 		}
 
-		for(int i=0;i<4;i++)
-		{
+		for (int i = 0; i < 4; i++) {
 			click(MoneyControlAppPage.search_in_Investing_app, MoneyControlAppPage.type_xpath);
-			KeywordUtil.inputText(By.xpath(MoneyControlAppPage.enter_index_in_Investing_app), global_4_indices_names1[i] , "user entered index name");
+			KeywordUtil.inputText(By.xpath(MoneyControlAppPage.enter_index_in_Investing_app),
+					global_4_indices_names1[i], "user entered index name");
 			KeywordUtil.delay(5000);
-			click("//android.widget.ListView/android.widget.RelativeLayout[@index='0']", MoneyControlAppPage.type_xpath);
-			global_index_value_IA[i]=KeywordUtil.getElementText(By.xpath(MoneyControlAppPage.get_index_value_in_Investing_app));
+			click("//android.widget.ListView/android.widget.RelativeLayout[@index='0']",
+					MoneyControlAppPage.type_xpath);
+			global_index_value_IA[i] = KeywordUtil
+					.getElementText(By.xpath(MoneyControlAppPage.get_index_value_in_Investing_app));
 			System.out.println(global_index_value_IA[i]);
-			global_index_percentage_IA[i]=KeywordUtil.getElementText(By.xpath(MoneyControlAppPage.get_index_percentage_in_Investing_app));
+			global_index_percentage_IA[i] = KeywordUtil
+					.getElementText(By.xpath(MoneyControlAppPage.get_index_percentage_in_Investing_app));
 			System.out.println(global_index_percentage_IA[i]);
 			GlobalUtil.getMDriver().navigate().back();
 			KeywordUtil.delay(1000);
@@ -1273,52 +1317,53 @@ public class MoneyControlAppTest extends MobileKeywords {
 		}
 
 	}
-	
+
 	String All_Indices_value_IA[];
 	String All_Indices_percentage_IA[];
 
 	@And("^User checks all the indices values of \"(.*)\" in Investing app$")
-	public void user_checks_all_indices_values_in_InvestingApp(String stockname)
-	{
+	public void user_checks_all_indices_values_in_InvestingApp(String stockname) {
 		dataMap = ExcelDataUtil.getTestDataWithTestCaseID("AllIndicesData", stockname);
-		String[] all_Indices=dataMap.get("AllIndices").split("\n");
-		All_Indices_value_IA=new String[all_Indices.length];
-		All_Indices_percentage_IA=new String[all_Indices.length];
-		
-		for(int i=0;i<all_Indices.length;i++)
-		{
+		String[] all_Indices = dataMap.get("AllIndices").split("\n");
+		All_Indices_value_IA = new String[all_Indices.length];
+		All_Indices_percentage_IA = new String[all_Indices.length];
+
+		for (int i = 0; i < all_Indices.length; i++) {
 			System.out.println(all_Indices[i]);
 			click(MoneyControlAppPage.search_in_Investing_app, MoneyControlAppPage.type_xpath);
-			KeywordUtil.inputText(By.xpath(MoneyControlAppPage.enter_index_in_Investing_app), all_Indices[i] , "user entered index name");
+			KeywordUtil.inputText(By.xpath(MoneyControlAppPage.enter_index_in_Investing_app), all_Indices[i],
+					"user entered index name");
 			KeywordUtil.delay(5000);
-			if(MobileKeywords.isWebElementPresent("//android.widget.ListView/android.widget.RelativeLayout[@index='0']",MoneyControlAppPage.type_xpath))
-			{
-				click("//android.widget.ListView/android.widget.RelativeLayout[@index='0']", MoneyControlAppPage.type_xpath);
-				WebDriverWait wait=new WebDriverWait(GlobalUtil.getMDriver(),20);
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(MoneyControlAppPage.get_index_value_in_Investing_app)));
-				All_Indices_value_IA[i]=KeywordUtil.getElementText(By.xpath(MoneyControlAppPage.get_index_value_in_Investing_app));
-				if(All_Indices_value_IA[i].contains(","))
-				{
-					All_Indices_value_IA[i]=All_Indices_value_IA[i].replaceAll(",", "");
+			if (MobileKeywords.isWebElementPresent(
+					"//android.widget.ListView/android.widget.RelativeLayout[@index='0']",
+					MoneyControlAppPage.type_xpath)) {
+				click("//android.widget.ListView/android.widget.RelativeLayout[@index='0']",
+						MoneyControlAppPage.type_xpath);
+				WebDriverWait wait = new WebDriverWait(GlobalUtil.getMDriver(), 20);
+				wait.until(ExpectedConditions
+						.visibilityOfElementLocated(By.xpath(MoneyControlAppPage.get_index_value_in_Investing_app)));
+				All_Indices_value_IA[i] = KeywordUtil
+						.getElementText(By.xpath(MoneyControlAppPage.get_index_value_in_Investing_app));
+				if (All_Indices_value_IA[i].contains(",")) {
+					All_Indices_value_IA[i] = All_Indices_value_IA[i].replaceAll(",", "");
 				}
 				System.out.println(All_Indices_value_IA[i]);
 				KeywordUtil.delay(1500);
-				All_Indices_percentage_IA[i]=KeywordUtil.getElementText(By.xpath(MoneyControlAppPage.get_index_percentage_in_Investing_app));
+				All_Indices_percentage_IA[i] = KeywordUtil
+						.getElementText(By.xpath(MoneyControlAppPage.get_index_percentage_in_Investing_app));
 				System.out.println(All_Indices_percentage_IA[i]);
-				if(All_Indices_percentage_IA[i].contains(" "))
-				{
-					All_Indices_percentage_IA[i]=All_Indices_percentage_IA[i].split(" ")[1];
-					All_Indices_percentage_IA[i]=All_Indices_percentage_IA[i].substring(2, All_Indices_percentage_IA[i].length()-2);
+				if (All_Indices_percentage_IA[i].contains(" ")) {
+					All_Indices_percentage_IA[i] = All_Indices_percentage_IA[i].split(" ")[1];
+					All_Indices_percentage_IA[i] = All_Indices_percentage_IA[i].substring(2,
+							All_Indices_percentage_IA[i].length() - 2);
 				}
 				System.out.println(All_Indices_percentage_IA[i]);
 				GlobalUtil.getMDriver().navigate().back();
 				KeywordUtil.delay(1000);
 				click(MoneyControlAppPage.back_in_Investing_app, MoneyControlAppPage.type_xpath);
-			}
-			else
-			{
+			} else {
 				KeywordUtil.takeMobileScreenshot(
-						System.getProperty("user.dir")+"\\"+"ActiveByValueScreenShots\\Sample"+i+".png");
+						System.getProperty("user.dir") + "\\" + "ActiveByValueScreenShots\\Sample" + i + ".png");
 				GlobalUtil.getMDriver().navigate().back();
 				KeywordUtil.delay(1000);
 				System.out.println("1");
@@ -1330,55 +1375,74 @@ public class MoneyControlAppTest extends MobileKeywords {
 	}
 
 	@And("^User clicks on IndianIndices$")
-	public void user_clicks_in_IndianIndices()
-	{
+	public void user_clicks_in_IndianIndices() {
 		MoneyControlAppPage.click_on_IndianIndices();
 	}
-
 
 	String all_indices_names[];
 	String all_indices_dateTime[];
 	String all_indices_values[];
-
 
 	ArrayList<String> namesList = new ArrayList<String>();
 	ArrayList<String> dateTimeList = new ArrayList<String>();
 	ArrayList<String> valuesList = new ArrayList<String>();
 
 	@And("^User gets all indices details$")
-	public void user_gets_all_indices_details()
-	{
+	public void user_gets_all_indices_details() {
 
-		for(int k=0;k<5;k++)
-		{
-			List<AndroidElement> all_indices_list=GlobalUtil.getMDriver().findElements(By.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout"));
-			System.out.println("all indices list size is "+all_indices_list.size());
+		for (int k = 0; k < 5; k++) {
+			List<AndroidElement> all_indices_list = GlobalUtil.getMDriver().findElements(By
+					.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout"));
+			System.out.println("all indices list size is " + all_indices_list.size());
 
-			all_indices_names=new String[all_indices_list.size()-1];
-			all_indices_dateTime=new String[all_indices_list.size()-1];
-			all_indices_values=new String[all_indices_list.size()-1];
+			all_indices_names = new String[all_indices_list.size() - 1];
+			all_indices_dateTime = new String[all_indices_list.size() - 1];
+			all_indices_values = new String[all_indices_list.size() - 1];
 
-			for(int i=0;i<all_indices_list.size()-1;i++)
-			{
-				if(MobileKeywords.isWebElementPresent("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"+(i+1)+"']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='0']", MoneyControlAppPage.type_xpath))
-				{
-					all_indices_names[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"+(i+1)+"']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='0']")).getText();
-					System.out.println("name is "+all_indices_names[i]);
+			for (int i = 0; i < all_indices_list.size() - 1; i++) {
+				if (MobileKeywords.isWebElementPresent(
+						"//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"
+								+ (i + 1)
+								+ "']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='0']",
+						MoneyControlAppPage.type_xpath)) {
+					all_indices_names[i] = GlobalUtil.getMDriver()
+							.findElement(By
+									.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"
+											+ (i + 1)
+											+ "']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='0']"))
+							.getText();
+					System.out.println("name is " + all_indices_names[i]);
 					namesList.add(all_indices_names[i]);
 				}
 				KeywordUtil.delay(1000);
 
-				if(MobileKeywords.isWebElementPresent("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"+(i+1)+"']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='1']", MoneyControlAppPage.type_xpath))
-				{
-					all_indices_dateTime[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"+(i+1)+"']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='1']")).getText();
-					System.out.println("date is "+all_indices_dateTime[i]);
+				if (MobileKeywords.isWebElementPresent(
+						"//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"
+								+ (i + 1)
+								+ "']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='1']",
+						MoneyControlAppPage.type_xpath)) {
+					all_indices_dateTime[i] = GlobalUtil.getMDriver()
+							.findElement(By
+									.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"
+											+ (i + 1)
+											+ "']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='1']"))
+							.getText();
+					System.out.println("date is " + all_indices_dateTime[i]);
 					dateTimeList.add(all_indices_dateTime[i]);
 				}
 				KeywordUtil.delay(1000);
-				if(MobileKeywords.isWebElementPresent("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"+(i+1)+"']/android.widget.LinearLayout/android.widget.LinearLayout//android.widget.TextView", MoneyControlAppPage.type_xpath))
-				{
-					all_indices_values[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"+(i+1)+"']/android.widget.LinearLayout/android.widget.LinearLayout//android.widget.TextView")).getText();
-					System.out.println("value is "+all_indices_values[i]);
+				if (MobileKeywords.isWebElementPresent(
+						"//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"
+								+ (i + 1)
+								+ "']/android.widget.LinearLayout/android.widget.LinearLayout//android.widget.TextView",
+						MoneyControlAppPage.type_xpath)) {
+					all_indices_values[i] = GlobalUtil.getMDriver()
+							.findElement(By
+									.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"
+											+ (i + 1)
+											+ "']/android.widget.LinearLayout/android.widget.LinearLayout//android.widget.TextView"))
+							.getText();
+					System.out.println("value is " + all_indices_values[i]);
 					valuesList.add(all_indices_values[i]);
 				}
 				System.out.println();
@@ -1389,23 +1453,23 @@ public class MoneyControlAppTest extends MobileKeywords {
 			KeywordUtil.delay(3000);
 		}
 
-		System.out.println("total names are "+namesList.size());
-		for (String name : namesList) { 		      
-			System.out.println(name); 		
+		System.out.println("total names are " + namesList.size());
+		for (String name : namesList) {
+			System.out.println(name);
 		}
 		System.out.println();
 		System.out.println();
 
-		System.out.println("total names are "+dateTimeList.size());
-		for (String name : dateTimeList) { 		      
-			System.out.println(name); 		
+		System.out.println("total names are " + dateTimeList.size());
+		for (String name : dateTimeList) {
+			System.out.println(name);
 		}
 		System.out.println();
 		System.out.println();
 
-		System.out.println("total names are "+valuesList.size());
-		for (String name : valuesList) { 		      
-			System.out.println(name); 		
+		System.out.println("total names are " + valuesList.size());
+		for (String name : valuesList) {
+			System.out.println(name);
 		}
 
 	}
@@ -1414,25 +1478,30 @@ public class MoneyControlAppTest extends MobileKeywords {
 	ArrayList<String> namesList_NSE = new ArrayList<String>();
 
 	@And("^User gets indices list in NSE tab$")
-	public void user_gets_indices_list_in_NSE_tab()
-	{
+	public void user_gets_indices_list_in_NSE_tab() {
 		KeywordUtil.delay(2000);
 		click(MoneyControlAppPage.NSE_tab_in_Allindices, MoneyControlAppPage.type_xpath);
 		System.out.println("NSE clicked");
-		for(int k=0;k<3;k++)
-		{
-			List<AndroidElement> all_indices_list=GlobalUtil.getMDriver().findElements(By.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout"));
-			System.out.println("NSE all indices list size is "+all_indices_list.size());
+		for (int k = 0; k < 3; k++) {
+			List<AndroidElement> all_indices_list = GlobalUtil.getMDriver().findElements(By
+					.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout"));
+			System.out.println("NSE all indices list size is " + all_indices_list.size());
 
-			NSE_indices_names=new String[all_indices_list.size()-1];
+			NSE_indices_names = new String[all_indices_list.size() - 1];
 
-
-			for(int i=0;i<all_indices_list.size()-1;i++)
-			{
-				if(MobileKeywords.isWebElementPresent("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"+(i+1)+"']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='0']", MoneyControlAppPage.type_xpath))
-				{
-					NSE_indices_names[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"+(i+1)+"']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='0']")).getText();
-					System.out.println("name is "+NSE_indices_names[i]);
+			for (int i = 0; i < all_indices_list.size() - 1; i++) {
+				if (MobileKeywords.isWebElementPresent(
+						"//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"
+								+ (i + 1)
+								+ "']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='0']",
+						MoneyControlAppPage.type_xpath)) {
+					NSE_indices_names[i] = GlobalUtil.getMDriver()
+							.findElement(By
+									.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"
+											+ (i + 1)
+											+ "']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='0']"))
+							.getText();
+					System.out.println("name is " + NSE_indices_names[i]);
 					namesList_NSE.add(NSE_indices_names[i]);
 				}
 				KeywordUtil.delay(1000);
@@ -1444,13 +1513,11 @@ public class MoneyControlAppTest extends MobileKeywords {
 			KeywordUtil.delay(3000);
 		}
 
-		System.out.println("total NSE names are "+namesList_NSE.size());
-		for (String name : namesList_NSE) { 		      
-			System.out.println(name); 		
+		System.out.println("total NSE names are " + namesList_NSE.size());
+		for (String name : namesList_NSE) {
+			System.out.println(name);
 		}
 		System.out.println();
-
-
 
 	}
 
@@ -1458,25 +1525,30 @@ public class MoneyControlAppTest extends MobileKeywords {
 	ArrayList<String> namesList_BSE = new ArrayList<String>();
 
 	@And("^User gets indices list in BSE tab$")
-	public void user_gets_indices_list_in_BSE_tab()
-	{
+	public void user_gets_indices_list_in_BSE_tab() {
 		KeywordUtil.delay(2000);
 		click(MoneyControlAppPage.BSE_tab_in_Allindices, MoneyControlAppPage.type_xpath);
 		System.out.println("BSE clicked");
-		for(int k=0;k<2;k++)
-		{
-			List<AndroidElement> all_indices_list=GlobalUtil.getMDriver().findElements(By.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout"));
-			System.out.println("BSE all indices list size is "+all_indices_list.size());
+		for (int k = 0; k < 2; k++) {
+			List<AndroidElement> all_indices_list = GlobalUtil.getMDriver().findElements(By
+					.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout"));
+			System.out.println("BSE all indices list size is " + all_indices_list.size());
 
-			BSE_indices_names=new String[all_indices_list.size()-1];
+			BSE_indices_names = new String[all_indices_list.size() - 1];
 
-
-			for(int i=0;i<all_indices_list.size()-1;i++)
-			{
-				if(MobileKeywords.isWebElementPresent("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"+(i+1)+"']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='0']", MoneyControlAppPage.type_xpath))
-				{
-					BSE_indices_names[i]=GlobalUtil.getMDriver().findElement(By.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"+(i+1)+"']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='0']")).getText();
-					System.out.println("name is "+BSE_indices_names[i]);
+			for (int i = 0; i < all_indices_list.size() - 1; i++) {
+				if (MobileKeywords.isWebElementPresent(
+						"//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"
+								+ (i + 1)
+								+ "']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='0']",
+						MoneyControlAppPage.type_xpath)) {
+					BSE_indices_names[i] = GlobalUtil.getMDriver()
+							.findElement(By
+									.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"
+											+ (i + 1)
+											+ "']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='1']/android.widget.TextView[@index='0']"))
+							.getText();
+					System.out.println("name is " + BSE_indices_names[i]);
 					namesList_BSE.add(BSE_indices_names[i]);
 				}
 				KeywordUtil.delay(1000);
@@ -1488,15 +1560,14 @@ public class MoneyControlAppTest extends MobileKeywords {
 			KeywordUtil.delay(3000);
 		}
 
-		System.out.println("total BSE names are "+namesList_BSE.size());
-		for (String name : namesList_BSE) { 		      
-			System.out.println(name); 		
+		System.out.println("total BSE names are " + namesList_BSE.size());
+		for (String name : namesList_BSE) {
+			System.out.println(name);
 		}
 		System.out.println();
 
-
 	}
-	
+
 	@Then("^User should see \"([^\"]*)\" in watchlist section$")
 	public void user_should_see_in_watchlist(String watchLists) throws InterruptedException {
 		String[] watchListItems = watchLists.split(":");
@@ -1535,29 +1606,28 @@ public class MoneyControlAppTest extends MobileKeywords {
 		AndroidElement portfolio = GlobalUtil.getMDriver().findElementByXPath(MoneyControlAppPage.Create_newportfolio);
 
 		if (portfolio.isDisplayed()) {
-		
+
 			RunCukesTest.logger.log(LogStatus.PASS, "<font color='blue'>+ " + portfolio.getText()
-			+ "</font> display validation in Create new portfolio button in  Portfolio Section - Successful.");
-		
-		}
-		else {
+					+ "</font> display validation in Create new portfolio button in  Portfolio Section - Successful.");
+
+		} else {
 			RunCukesTest.logger.log(LogStatus.FAIL, "<font color='blue'>+ " + portfolio.getText()
-			+ "</font> display validation in Create new portfolio button in  Portfolio Section - Fail.");
+					+ "</font> display validation in Create new portfolio button in  Portfolio Section - Fail.");
 		}
-	
-	AndroidElement Signin_bt = GlobalUtil.getMDriver().findElementByXPath(MoneyControlAppPage.Signin_btn);
 
-	if(GlobalUtil.getMDriver().findElementByXPath(MoneyControlAppPage.Signin_btn).isDisplayed())
-	
-		RunCukesTest.logger.log(LogStatus.PASS, "<font color='blue'>+ " + Signin_bt.getText()
-				+ "</font> display validation in Signin button Portfolio Section - Successful.");
+		AndroidElement Signin_bt = GlobalUtil.getMDriver().findElementByXPath(MoneyControlAppPage.Signin_btn);
 
-		else 
+		if (GlobalUtil.getMDriver().findElementByXPath(MoneyControlAppPage.Signin_btn).isDisplayed())
+
+			RunCukesTest.logger.log(LogStatus.PASS, "<font color='blue'>+ " + Signin_bt.getText()
+					+ "</font> display validation in Signin button Portfolio Section - Successful.");
+
+		else
 			RunCukesTest.logger.log(LogStatus.FAIL, "<font color='blue'>+ " + Signin_bt.getText()
-			+ "</font> display validation in Create new portfolio button in  Portfolio Section - Fail.");
-		
-	
-	} 
+					+ "</font> display validation in Create new portfolio button in  Portfolio Section - Fail.");
+
+	}
+
 	@Then("^User Navigate to homepage and Refresh the page$")
 	public void navigatetoHomepageandRefreshthepage() {
 		KeywordUtil.delay(2000);
@@ -1567,13 +1637,13 @@ public class MoneyControlAppTest extends MobileKeywords {
 		KeywordUtil.delay(2000);
 		MoneyControlAppPage.clickbackbtn();
 		KeywordUtil.delay(2000);
-		//GlobalUtil.getMDriver().navigate().refresh();
-		//MobileKeywords.pageRefresh();
-		
+		// GlobalUtil.getMDriver().navigate().refresh();
+		// MobileKeywords.pageRefresh();
+
 	}
-	
+
 	@Then("^User verifies Stocks Last Visited Section$")
-	public void verifiesStocksLastVisitedSection()  {
+	public void verifiesStocksLastVisitedSection() {
 		for (int i = 1; i <= 9; i++)
 			try {
 				GlobalUtil.getMDriver().findElementByXPath(MoneyControlAppPage.Stocklast_visited).getText();
@@ -1583,33 +1653,30 @@ public class MoneyControlAppTest extends MobileKeywords {
 
 			}
 		AndroidElement Stockname = GlobalUtil.getMDriver().findElementByXPath(MoneyControlAppPage.stockname);
-		if(Stockname.isDisplayed())
-		{	
-			RunCukesTest.logger.log(LogStatus.PASS, HTMLReportUtil.passStringGreenColor("<font color='blue'>+ " + Stockname.getText()
-					+ "</font> display validation in Stocks in Stocks validation Section - Successful."));
-			System.out.println(Stockname.getText()+" is displayed in Stocks Last Visited section");
-		}
-		else
-		{	
-			RunCukesTest.logger.log(LogStatus.FAIL, HTMLReportUtil.passStringGreenColor("<font color='blue'>+ " + Stockname.getText()
-			+ "</font> display validation in Stocks in Stocks validation Section - Fail."));
-			System.out.println(Stockname.getText()+" is not displayed in Stocks Last Visited section");
+		if (Stockname.isDisplayed()) {
+			RunCukesTest.logger.log(LogStatus.PASS,
+					HTMLReportUtil.passStringGreenColor("<font color='blue'>+ " + Stockname.getText()
+							+ "</font> display validation in Stocks in Stocks validation Section - Successful."));
+			System.out.println(Stockname.getText() + " is displayed in Stocks Last Visited section");
+		} else {
+			RunCukesTest.logger.log(LogStatus.FAIL,
+					HTMLReportUtil.passStringGreenColor("<font color='blue'>+ " + Stockname.getText()
+							+ "</font> display validation in Stocks in Stocks validation Section - Fail."));
+			System.out.println(Stockname.getText() + " is not displayed in Stocks Last Visited section");
 		}
 	}
+
 	@Then("^User verifies the Stocks last visited with \"([^\"]*)\"$")
-	public void user_verifies_stocks_last_visited_two_more_stocks(String stockname)
-	{
+	public void user_verifies_stocks_last_visited_two_more_stocks(String stockname) {
 		dataMap = ExcelDataUtil.getTestDataWithTestCaseID("MoneyControl", stockname);
-		String[] stocksLastVisited=dataMap.get("StocksLastVisited").split("\n");
-		for(int i=0;i<stocksLastVisited.length;i++)
-		{
-		user_click_on_searchbutton();
-		MoneyControlAppPage.enterMcStock(stocksLastVisited[i]);
-		navigatetoHomepageandRefreshthepage();
-		verifiesStocksLastVisitedSection();
+		String[] stocksLastVisited = dataMap.get("StocksLastVisited").split("\n");
+		for (int i = 0; i < stocksLastVisited.length; i++) {
+			user_click_on_searchbutton();
+			MoneyControlAppPage.enterMcStock(stocksLastVisited[i]);
+			navigatetoHomepageandRefreshthepage();
+			verifiesStocksLastVisitedSection();
 		}
-		
+
 	}
-	
 
 }

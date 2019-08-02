@@ -9,12 +9,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
-import org.apache.log4j.spi.LoggingEvent;
-
-import com.gargoylesoftware.htmlunit.html.HtmlAttributeChangeEvent;
 
 /**
- * @author TestLink
+ * @author TX
  *
  */
 public class LogUtil {
@@ -24,42 +21,33 @@ public class LogUtil {
 	static FileAppender normalFileApp;
 	static FileAppender errorFileApp;
 	static FileAppender htmlFileApp;
-	
+
 	static ConsoleAppender conApp;
 	static RollingFileAppender normalRap;
 	static RollingFileAppender errorRap;
 	private static boolean isInit = false;
-	private LogUtil(){}
-
-
 
 	static PatternLayout patternLayout = new PatternLayout("%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n");
 	static PatternLayout consolePatternLayout = new PatternLayout("\tLOG-: [%m -  %d{yyyy-MM-dd HH:mm:ss a}] %n");
 	static HTMLLayout htmlLayout = new HTMLLayout();
+
 	/**
 	 * @param clazz
 	 */
 	public static void init(Class clazz) {
 		if (!isInit) {
-
 			try {
-				htmlLogger = Logger.getLogger(clazz+",HtmlLogger");
-				htmlLogger .setLevel(Level.INFO);
+				htmlLogger = Logger.getLogger(clazz + ",HtmlLogger");
+				htmlLogger.setLevel(Level.INFO);
 				htmlLayout.setTitle("Automation Logs");
 				htmlFileApp = new FileAppender(htmlLayout, ConfigReader.getValue("logHtmlFilePath"));
 				htmlFileApp.setImmediateFlush(true);
-				htmlFileApp .setAppend(false);
+				htmlFileApp.setAppend(false);
 				htmlFileApp.activateOptions();
 				htmlLogger.addAppender(htmlFileApp);
-				
-				
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			
-			
-			
-			
 			normalLogger = Logger.getLogger(clazz + ",NormalLogger");
 			normalLogger.setLevel(Level.INFO);
 
@@ -70,8 +58,6 @@ public class LogUtil {
 			normalFileApp.setImmediateFlush(true);
 			normalLogger.addAppender(normalFileApp);
 			normalFileApp.activateOptions();
-
-			// Rolling File Appender for maximum 5 mb log file size
 			try {
 				normalRap = new RollingFileAppender(patternLayout, normalFileApp.getFile());
 				normalRap.setMaxBackupIndex(5);
@@ -90,7 +76,6 @@ public class LogUtil {
 			errorFileApp.setImmediateFlush(true);
 			errorLogger.addAppender(errorFileApp);
 			errorFileApp.activateOptions();
-
 			try {
 				errorRap = new RollingFileAppender(patternLayout, errorFileApp.getFile());
 				normalRap.setMaxBackupIndex(5);
@@ -104,9 +89,7 @@ public class LogUtil {
 			conApp.setLayout(consolePatternLayout);
 			conApp.setTarget("System.out");
 			conApp.activateOptions();
-			
 			normalLogger.addAppender(conApp);
-
 			isInit = true;
 		}
 	}
@@ -116,19 +99,17 @@ public class LogUtil {
 	 */
 	public static void init(String className) {
 		if (!isInit) {
-			
+
 			try {
-				htmlLogger = Logger.getLogger(className+",HtmlLogger");
-				htmlLogger .setLevel(Level.DEBUG);
-				
+				htmlLogger = Logger.getLogger(className + ",HtmlLogger");
+				htmlLogger.setLevel(Level.DEBUG);
 				htmlLayout.setTitle("Automation Logs");
-				
+
 				htmlFileApp = new FileAppender(htmlLayout, ConfigReader.getValue("logHtmlFilePath"));
 				htmlFileApp.setImmediateFlush(true);
 				htmlFileApp.activateOptions();
 				htmlLogger.addAppender(htmlFileApp);
-				
-				
+
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -156,9 +137,7 @@ public class LogUtil {
 			conApp.setLayout(consolePatternLayout);
 			conApp.setTarget("System.out");
 			conApp.activateOptions();
-
 			normalLogger.addAppender(conApp);
-
 			isInit = true;
 		}
 	}
@@ -171,7 +150,6 @@ public class LogUtil {
 		init(clazz);
 		normalLogger.info(message);
 		htmlLogger.info(message);
-
 	}
 
 	/**
@@ -182,7 +160,6 @@ public class LogUtil {
 		init(className);
 		normalLogger.info(message);
 		htmlLogger.info(message);
-
 	}
 
 	/**
@@ -192,10 +169,9 @@ public class LogUtil {
 	 */
 	public static void errorLog(Class clazz, String message, Throwable t) {
 		init(clazz);
-		htmlLogger.error(message,t);
+		htmlLogger.error(message, t);
 		errorLogger.error(message, t);
 		errorLogger.error("----------------------------------------------------------------------");
-
 	}
 
 	/**
@@ -207,7 +183,6 @@ public class LogUtil {
 		htmlLogger.error(message);
 		errorLogger.error(message);
 		errorLogger.error("-----------------------------------------------------------------------");
-
 	}
 
 	/**
@@ -219,8 +194,5 @@ public class LogUtil {
 		htmlLogger.error(message);
 		errorLogger.error(message);
 		errorLogger.error("-----------------------------------------------------------------------");
-
 	}
-
-
 }

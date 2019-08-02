@@ -31,7 +31,6 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Function;
-import com.jayway.restassured.config.Config;
 import com.relevantcodes.extentreports.LogStatus;
 
 import step_definitions.RunCukesTest;
@@ -47,7 +46,6 @@ public class KeywordUtil extends GlobalUtil {
 	static WebElement webElement;
 	protected static String url = "";
 	private static String userDir = "user.dir";
-	private static String text = "";
 	public static final String VALUE = "value";
 	public static String lastAction = "";
 	public static Xlsx_Reader AutomationDataSheet;
@@ -1092,12 +1090,5 @@ public class KeywordUtil extends GlobalUtil {
 		String emailStr = emailFL.toString();
 		String email = emailStr + "@gmail.com";
 		return email;
-	}
-
-}// End class
-
-class TestStepFailedException extends Exception {
-	TestStepFailedException(String s) {
-		super(s);
 	}
 }

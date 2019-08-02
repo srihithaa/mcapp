@@ -21,13 +21,10 @@ public class ExcelDataUtil {
 
 	private static FileInputStream fs = null;
 	private static Workbook workbook = null;
-	private static Sheet sheet=null;
+	private static Sheet sheet = null;
 
 	private static int columnToLookTestCaseID = Integer.parseInt(ConfigReader.getValue("columnToLookTestCaseID"));
 	private static String testDatafilePath = ConfigReader.getValue("testDataExcelPath");
-	private static String testDataSheetName = ConfigReader.getValue("testDataSheet");
-	private static boolean isCopyTemplate = false;
-	private static String filePath = "";
 	protected static List<String> testsList = new ArrayList<>();
 	private static String excelextensionxlsx = ".xlsx";
 	public static final String TESTRESULTSHEET = "testResultSheet";
@@ -35,7 +32,7 @@ public class ExcelDataUtil {
 	public static final String EXCEPTIONCAUGHT = "Exception caught";
 	private static String excelextensionxls = ".xls";
 	private static String automationcontrolexcelpath = "AutomationControlExcelPath";
-	private static final String INVALID_SHEET_MESSAGE="Error! No such sheet available in Excel file";
+	private static final String INVALID_SHEET_MESSAGE = "Error! No such sheet available in Excel file";
 
 	/**
 	 * <H1>Excel initialize</H1>
@@ -63,14 +60,13 @@ public class ExcelDataUtil {
 
 	}
 
-
 	/**
 	 * <H1>Get test data with test case id</H1>
 	 * 
 	 * @param testCaseID
 	 * @return
 	 */
-	public static HashMap<String, String> getTestDataWithTestCaseID(String sheetName,String testCaseID) {
+	public static HashMap<String, String> getTestDataWithTestCaseID(String sheetName, String testCaseID) {
 		boolean found = false;
 		boolean isfirstRow = false;
 		Row firstrow = null;
@@ -80,10 +76,10 @@ public class ExcelDataUtil {
 		init(testDatafilePath, sheetName);
 		Iterator<Row> rowIterator = sheet.iterator();
 		try {
-			//int iCellCounter = 0;
+			// int iCellCounter = 0;
 			while (rowIterator.hasNext()) {
-				Row row =  rowIterator.next();
-				if(!isfirstRow){
+				Row row = rowIterator.next();
+				if (!isfirstRow) {
 					firstrow = row;
 					isfirstRow = true;
 				}
@@ -91,15 +87,15 @@ public class ExcelDataUtil {
 					found = true;
 					for (int i = 0; i < row.getLastCellNum(); i++) {
 						String cellValue = row.getCell(i).getStringCellValue();
-						if(cellValue == null){
+						if (cellValue == null) {
 							cellValue = "";
 						}
 						cellValue = getUniqueString(cellValue);
 						currentRowData.put(firstrow.getCell(i).getStringCellValue(), cellValue);
 					}
 					break;
-				} 
-			} 
+				}
+			}
 
 			fs.close();
 
@@ -112,9 +108,9 @@ public class ExcelDataUtil {
 		return currentRowData;
 
 	}
-	
-	public static String getUniqueString(String string){
-		return string.replaceAll("UNIQUE",""+System.currentTimeMillis());
+
+	public static String getUniqueString(String string) {
+		return string.replaceAll("UNIQUE", "" + System.currentTimeMillis());
 	}
 
 	/**
@@ -128,8 +124,7 @@ public class ExcelDataUtil {
 
 		String sheetName = ConfigReader.getValue("AutomationControlSheet");
 
-
-		try(FileInputStream fis =new FileInputStream(ConfigReader.getValue(automationcontrolexcelpath)); 
+		try (FileInputStream fis = new FileInputStream(ConfigReader.getValue(automationcontrolexcelpath));
 				Workbook wb = WorkbookFactory.create(fis);) {
 
 			if (wb.getSheetIndex(wb.getSheet(sheetName)) == -1) {
@@ -202,28 +197,23 @@ public class ExcelDataUtil {
 			val = sheet.getRow(20).getCell(1).getStringCellValue();
 			commonSettings.setManageToolName(val);
 
-
 			val = sheet.getRow(21).getCell(1).getStringCellValue();
 			commonSettings.setTestlinkTool(val);
-
 
 			val = sheet.getRow(22).getCell(1).getStringCellValue();
 			commonSettings.setTestLinkHostName(val);
 
-
 			val = sheet.getRow(23).getCell(1).getStringCellValue();
 			commonSettings.setTestlinkAPIKey(val);
 
-
 			val = sheet.getRow(24).getCell(1).getStringCellValue();
 			commonSettings.setTestlinkProjectName(val);
-
 
 			val = sheet.getRow(25).getCell(1).getStringCellValue();
 			commonSettings.setTestlinkPlanName(val);
 
 			val = sheet.getRow(27).getCell(1).getStringCellValue();
-			commonSettings.setBugToolName(val); 
+			commonSettings.setBugToolName(val);
 
 			val = sheet.getRow(28).getCell(1).getStringCellValue();
 			commonSettings.setbugTool(val);
@@ -248,44 +238,44 @@ public class ExcelDataUtil {
 
 			val = sheet.getRow(37).getCell(1).getStringCellValue();
 			commonSettings.setJiraProjectID(val);
-			
+
 			val = sheet.getRow(39).getCell(1).getStringCellValue();
 			commonSettings.setRestURL(val);
-			
+
 			val = sheet.getRow(43).getCell(1).getStringCellValue();
 			commonSettings.setAndroidVersion(val);
-			
+
 			val = sheet.getRow(44).getCell(1).getStringCellValue();
 			commonSettings.setAndroidName(val);
-			
+
 			val = sheet.getRow(45).getCell(1).getStringCellValue();
 			commonSettings.setAndroidID(val);
-			
+
 			val = sheet.getRow(46).getCell(1).getStringCellValue();
 			commonSettings.setAndroidBrowser(val);
-			
+
 		} // End try
 		catch (Exception e) {
 			LogUtil.errorLog(ExcelDataUtil.class, EXCEPTIONCAUGHT, e);
-		}  
+		}
 		return commonSettings;
 
 	}
 
-
 	/**
 	 * <H1>Get Flag from excel</H1>
+	 * 
 	 * @param sheetName
 	 * @param searchValue
 	 * @return
 	 */
 	public static String getFlagExcel(String sheetName, String searchValue) {
-		int sheetSize = 0; 
+		int sheetSize = 0;
 		int rowNum = 1;
 		String strVal = "";
 		String strflag = "NA";
-		try(FileInputStream fis = new FileInputStream(ConfigReader.getValue(automationcontrolexcelpath));
-				Workbook wb = WorkbookFactory.create(fis);	) {
+		try (FileInputStream fis = new FileInputStream(ConfigReader.getValue(automationcontrolexcelpath));
+				Workbook wb = WorkbookFactory.create(fis);) {
 
 			if (wb.getSheetIndex(wb.getSheet(sheetName)) == -1) {
 				LogUtil.infoLog(ExcelDataUtil.class, INVALID_SHEET_MESSAGE + sheetName);
@@ -305,7 +295,6 @@ public class ExcelDataUtil {
 				}
 			}
 
-
 		} catch (Exception e) {
 			strflag = "NA";
 			LogUtil.errorLog(ExcelDataUtil.class, EXCEPTIONCAUGHT, e);
@@ -317,7 +306,9 @@ public class ExcelDataUtil {
 	// Read Data from Excel File AutomationControlSheet.xls(SuiteControlSheet),
 	// Reading Y/N for including a test case in suite to run.
 	/**
-	 * <H1>Read Data from Excel File AutomationControlSheet.xls(SuiteControlSheet)</H1>
+	 * <H1>Read Data from Excel File
+	 * AutomationControlSheet.xls(SuiteControlSheet)</H1>
+	 * 
 	 * @param suiteName
 	 * @return
 	 */
@@ -341,7 +332,9 @@ public class ExcelDataUtil {
 
 	// Read Excel file for Script to run. Like Regression, Smoke, Functional
 	/**
-	 * <H1>Read Excel file for Script to run. Like Regression, Smoke, Functional</H1>
+	 * <H1>Read Excel file for Script to run. Like Regression, Smoke,
+	 * Functional</H1>
+	 * 
 	 * @param suiteName
 	 * @param scriptName
 	 * @return
@@ -362,19 +355,14 @@ public class ExcelDataUtil {
 		}
 		return isRunnable;
 	}
+
 	/**
-	 * <H1>Print test status</H1>
-	 * @param suiteName
-	 * @param searchValue
-	 * @param testStatus
-	 * @exception
+	 * <H1>Print test status</H1> @param suiteName @param searchValue @param
+	 * testStatus @exception
 	 */
 
 	/**
-	 * <H1>Print test status</H1>
-	 * @param suiteName
-	 * @param testCaseID
-	 * @exception
+	 * <H1>Print test status</H1> @param suiteName @param testCaseID @exception
 	 */
 	public static boolean getControls(String suiteName, String testCaseID) {
 
@@ -394,23 +382,19 @@ public class ExcelDataUtil {
 	// Get browsers List
 	/**
 	 * <H1>Get browsers List</H1>
-	 * @exception
-	 * @return
+	 * 
+	 * @exception @return
 	 */
-
-
-
-
 
 }// End Excel class
 
-class InvalidSheetException extends Exception{  
+class InvalidSheetException extends Exception {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	InvalidSheetException(String s){  
-		super(s);  
-	}  
-}  
+	InvalidSheetException(String s) {
+		super(s);
+	}
+}
