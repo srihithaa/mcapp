@@ -57,11 +57,11 @@ Feature: Assigned Tasks Validation
  		 @4IndicesCheck 
 		 Scenario Outline: Money Control Android App Profile Login via Email account
      When User clicks skips next option
-     When User clicks on profile icon
-     And Read login Testdata "<TestData>" from Excel file
-     Then User enters ProUser credentials and click login
-     And User accepts messages
-     When User clicks skips next option
+    # When User clicks on profile icon
+    # And Read login Testdata "<TestData>" from Excel file
+    # Then User enters ProUser credentials and click login
+    # And User accepts messages
+    # When User clicks skips next option
      And User goes to Indices section in Homepage
      And User checks Indian indices and Global indices display
 	
@@ -78,9 +78,9 @@ Feature: Assigned Tasks Validation
     # Then User enters ProUser credentials and click login
     # And User accepts messages
     # When User clicks skips next option
-   	 And User gets indices values
-   	 And User switches to Investing app
-   	 And User verifies the indices values and percentages in Investing app
+   	 And User gets indices values for New App
+   	# And User switches to Investing app
+   	# And User verifies the indices values and percentages in Investing app
    	 
 	
      
@@ -143,5 +143,3 @@ Feature: Assigned Tasks Validation
  		 Examples:
  		 |TestData          |StockData|
  		 |StockName SBI     |StockVariationTestData|
-     
-     
