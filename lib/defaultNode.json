@@ -7,7 +7,7 @@
 			"platformName": "ANDROID",
 			"platformVersion": "ANDROID",
 			"deviceName": "192.168.113.149:5555",
-			"appPackage": "com.divum.MoneyControl",
+			"appPackage": "com.divum.MoneyControl.debug",
 			"appActivity": "com.moneycontrol.handheld.base.HomeActivity",
 			"app": "sldkghskdghb",
 			"udid": "sldkghskdghb",

@@ -12,11 +12,9 @@ import org.testng.Assert;
 import com.relevantcodes.extentreports.LogStatus;
 
 import io.appium.java_client.MobileElement;
-import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
-import io.appium.java_client.touch.offset.ElementOption;
 import mobileutil.MobileKeywords;
 import step_definitions.RunCukesTest;
 import utilities.GlobalUtil;
@@ -175,6 +173,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 	public static String commodities_option_in_watchlist = "//*[@text='Commodities'][@index='2']";
 	public static String futures_option_in_watchlist = "//*[@text='Futures'][@index='3']";
 	public static String currencies_option_in_watchlist = "//*[@text='Currencies'][@index='4']";
+
 	public static String ETcancel = "//*[@resource-id='com.et.reader.activities:id/rating_close']";
 	public static String ETlater = "//*[@resource-id='com.et.reader.activities:id/btn_later']";
 	public static String money_control_pro = "//*[@text='Moneycontrol Pro']";
@@ -290,7 +289,8 @@ public class MoneyControlAppPage extends MobileKeywords {
 	public static String Nse_Diff = "//android.widget.TextView[@resource-id='in.tazone.nsestocks:id/change'][@index='5']";
 	public static String Nse_perc = "//android.widget.TextView[@resource-id='in.tazone.nsestocks:id/change_perc'][@index='6']";
 	public static String Nse_prev_value = "//android.widget.TextView[@resource-id='in.tazone.nsestocks:id/prev_close'][@index='3']";
-	public static String nse_click_tap = "//*[@resource-id='in.tazone.nsestocks:id/value_container']";
+	public static String nse_click_tap = "//*[@resource-id='in.tazone.nsestocks:id/symbol_search_list']/android.view.ViewGroup[@index='0']";
+	// *[@resource-id='in.tazone.nsestocks:id/value_container']";
 	// *[@class='android.view.ViewGroup'][@instance='2']";
 
 	///////////// ********************* For New Test Cases
@@ -378,12 +378,12 @@ public class MoneyControlAppPage extends MobileKeywords {
 					.getText();
 			System.out.println("text is : " + text);
 			if ((text.contains("Opinion")) != true) {
-				if (isWebElementPresent(Opinion_tab, type_xpath)) {
+				if (MobileKeywords.isWebElementPresent(Opinion_tab, type_xpath)) {
 					click(Opinion_tab, type_xpath);
 					System.out.println("2");
 				}
 			}
-			if (isWebElementPresent(Opinion_tab, type_xpath)) {
+			if (MobileKeywords.isWebElementPresent(Opinion_tab, type_xpath)) {
 				click(Opinion_tab, type_xpath);
 				System.out.println("2");
 			}
@@ -528,22 +528,25 @@ public class MoneyControlAppPage extends MobileKeywords {
 
 	public static void opinion_get_news() {
 		try {
-			if (isWebElementPresent(MoneyControlAppPage.closeadd, MoneyControlAppPage.type_xpath)) {
+			if (MobileKeywords.isWebElementPresent(MoneyControlAppPage.closeadd, MoneyControlAppPage.type_xpath)) {
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.closeadd)).click();
 				KeywordUtil.delay(1000);
 				mobileTap(576, 147);
 			}
 			List<AndroidElement> news_list = GlobalUtil.getMDriver().findElements(
 					By.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.view.ViewGroup"));
+			// System.out.println("news_list size is " + news_list.size());
 			int num = 0;
 			for (int i = 0; i < news_list.size(); i++) {
 				try {
 					num = i + 1;
+					// System.out.println("11");
 					if (MobileKeywords
 							.isWebElementPresent(
 									"//android.widget.ListView[@resource-id='android:id/list']/android.view.ViewGroup[@index='"
 											+ num + "']//android.widget.LinearLayout/android.widget.ImageView",
 									type_xpath)) {
+						// System.out.println("12");
 						String news_headline_text_before = GlobalUtil.getMDriver()
 								.findElement(
 										By.xpath("//*[@resource-id='android:id/list']/android.view.ViewGroup[@index='"
@@ -571,12 +574,10 @@ public class MoneyControlAppPage extends MobileKeywords {
 						mobileSwipeTouchAction(500, 1600, 500, 1450, 1000);
 						KeywordUtil.delay(2000);
 						check_news_content();
-
 						GlobalUtil.getMDriver()
 								.findElement(By.xpath("//*[@resource-id='com.divum.MoneyControl:id/back_button']"))
 								.click();
 						KeywordUtil.delay(3000);
-
 					}
 				} catch (Exception ex) {
 					System.out.println(ex.getMessage());
@@ -593,13 +594,13 @@ public class MoneyControlAppPage extends MobileKeywords {
 
 	public static void check_news_content() {
 		try {
-			if (isWebElementPresent("//*[@text='Get Unlimited Access. Go Pro']", type_xpath)) {
+			if (MobileKeywords.isWebElementPresent("//*[@text='Get Unlimited Access. Go Pro']", type_xpath)) {
 				System.out.println("User is able to see GoToPro message is verifed");
 			} else {
 				System.out.println("User is not able to see GoToPro message is verified");
 			}
-			if (isWebElementPresent("//*[contains(@text,'To view the full content of this premium section')]",
-					type_xpath)) {
+			if (MobileKeywords.isWebElementPresent(
+					"//*[contains(@text,'To view the full content of this premium section')]", type_xpath)) {
 				System.out.println("User is not able to see Pro content fully is verified");
 			} else {
 				System.out.println("User is able to see Pro content fully is verifed");
@@ -652,7 +653,6 @@ public class MoneyControlAppPage extends MobileKeywords {
 					check_news_content();
 					mobileSwipeTouchAction(500, 1600, 500, 1450, 1000);
 					check_news_content();
-
 					GlobalUtil.getMDriver()
 							.findElement(By.xpath("//*[@resource-id='com.divum.MoneyControl:id/back_button']")).click();
 					KeywordUtil.delay(3000);
@@ -681,6 +681,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 				KeywordUtil.delay(3000);
 			}
 		}
+
 	}
 
 	public static void click_SignupwithEmail() {
@@ -825,27 +826,35 @@ public class MoneyControlAppPage extends MobileKeywords {
 
 	public static void verify_loginpage(String email) {
 		try {
+			// wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(portfolio_profile)));
 			explicitWaitForElementforGivenTime(MoneyControlAppPage.portfolio_profile, MoneyControlAppPage.type_xpath,
 					10);
 			GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.portfolio_profile)).click();
 
 			String useremail_name = GlobalUtil.getMDriver()
 					.findElement(By.xpath(MoneyControlAppPage.portfolio_profile_useremail)).getText();
-			if (useremail_name.contains(email))
+			if (useremail_name.contains(email)) {
 				System.out.println("User emailid is verified");
+			}
+
 			Assert.assertEquals(GlobalUtil.getMDriver()
 					.findElement(By.xpath(MoneyControlAppPage.portfolio_profile_useremail)).getText().contains(email),
 					true);
 			RunCukesTest.logger.log(LogStatus.PASS, HTMLReportUtil.passStringGreenColor("user email is verified"));
+
+			// wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(portfolio_profile_logout)));
 			explicitWaitForElementforGivenTime(MoneyControlAppPage.portfolio_profile_logout,
 					MoneyControlAppPage.type_xpath, 10);
 			WebElement a = GlobalUtil.getMDriver().findElementByXPath(MoneyControlAppPage.portfolio_profile_logout);
 			mobileTap(a);
+			// wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(portfolio_profile)));
 			explicitWaitForElementforGivenTime(MoneyControlAppPage.portfolio_profile, MoneyControlAppPage.type_xpath,
 					10);
 			GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.portfolio_profile)).click();
-			if (GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.loginwithfacebook)).isDisplayed())
+			if (GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.loginwithfacebook)).isDisplayed()) {
 				System.out.println("User successfully loged out");
+			}
+
 		} catch (Exception e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
@@ -865,8 +874,9 @@ public class MoneyControlAppPage extends MobileKeywords {
 			explicitWaitForElementforGivenTime(MoneyControlAppPage.portfolio_profile, MoneyControlAppPage.type_xpath,
 					15);
 			GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.portfolio_profile)).click();
-			if (GlobalUtil.isWebElementPresent(loginwithfacebook, type_xpath))
+			if (GlobalUtil.isWebElementPresent(loginwithfacebook, type_xpath)) {
 				System.out.println("User successfully logged out");
+			}
 		} catch (Throwable e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
@@ -881,10 +891,18 @@ public class MoneyControlAppPage extends MobileKeywords {
 			System.out.println("stock_list size is " + stock_list.length);
 			for (int i = 0; i < stock_list.length; i++) {
 				System.out.println(stock_list[i]);
+				// explicitWaitForElementforGivenTime(MoneyControlAppPage.addstockssymbol,
+				// MoneyControlAppPage.type_xpath, 10);
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.addstockssymbol)).click();
+
+				// Assert.assertEquals(GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.addstocks_text)).getText(),
+				// "ADD STOCKS","Add Stocks page display is verified");
+
 				WebElement a = GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.companyname));
 				a.sendKeys(stock_list[i]);
-				if (isWebElementPresent(MoneyControlAppPage.closeadd, MoneyControlAppPage.type_xpath)) {
+
+				// KeywordUtil.delay(1000);
+				if (MobileKeywords.isWebElementPresent(MoneyControlAppPage.closeadd, MoneyControlAppPage.type_xpath)) {
 					GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.closeadd)).click();
 					KeywordUtil.delay(1000);
 					mobileTap(576, 147);
@@ -898,7 +916,8 @@ public class MoneyControlAppPage extends MobileKeywords {
 				mobileTap(x + h, y + h + 50);
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.investmentdate)).click();
 				for (int j = 1; j <= 10; j++) {
-					if (isWebElementPresent(MoneyControlAppPage.please_enter_stock_name,
+
+					if (MobileKeywords.isWebElementPresent(MoneyControlAppPage.please_enter_stock_name,
 							MoneyControlAppPage.type_xpath)) {
 						System.out.println(j);
 						GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.OK)).click();
@@ -916,7 +935,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 
 				GlobalUtil.getMDriver().hideKeyboard();
 				KeywordUtil.delay(3000);
-				if (isWebElementPresent(MoneyControlAppPage.closeadd, MoneyControlAppPage.type_xpath)) {
+				if (MobileKeywords.isWebElementPresent(MoneyControlAppPage.closeadd, MoneyControlAppPage.type_xpath)) {
 					GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.closeadd)).click();
 					KeywordUtil.delay(1000);
 					mobileTap(576, 147);
@@ -933,11 +952,12 @@ public class MoneyControlAppPage extends MobileKeywords {
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.OK)).click();
 
 				KeywordUtil.delay(1000);
-				if (isWebElementPresent(MoneyControlAppPage.closeadd, MoneyControlAppPage.type_xpath)) {
+				if (MobileKeywords.isWebElementPresent(MoneyControlAppPage.closeadd, MoneyControlAppPage.type_xpath)) {
 					GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.closeadd)).click();
 					KeywordUtil.delay(1000);
 					mobileTap(576, 147);
 				}
+
 				explicitWaitForElementforGivenTime(MoneyControlAppPage.stocksoption, MoneyControlAppPage.type_xpath,
 						10);
 			}
@@ -951,14 +971,18 @@ public class MoneyControlAppPage extends MobileKeywords {
 	public static void add_stocks_to_profile(String stockname) {
 		try {
 			explicitWaitForElementforGivenTime(MoneyControlAppPage.stocksoption, MoneyControlAppPage.type_xpath, 10);
+
 			Assert.assertEquals(
 					GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.stocksoption)).getText(), "Stocks",
 					"Stocks link is visibility is verified");
 			GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.stocksoption)).click();
+
 			KeywordUtil.delay(1000);
+
 			add_all_stocks_to_profile(stockname);
 			user_verifies_investment_amounts();
 			user_verifies_stocknames(stockname);
+
 			KeywordUtil.delay(3000);
 		} catch (Throwable e) {
 			GlobalUtil.e = e;
@@ -975,7 +999,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 			System.out.println("elements list size is " + list3.size());
 			System.out.println();
 			for (int i = 1; i < list3.size(); i++) {
-				if (isWebElementPresent(
+				if (MobileKeywords.isWebElementPresent(
 						"//*[@resource-id='android:id/list']/android.widget.LinearLayout[@index='" + i
 								+ "']/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView[@index='0']",
 						type_xpath)) {
@@ -984,6 +1008,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 									"//*[@resource-id='android:id/list']/android.widget.LinearLayout[@index='" + i
 											+ "']/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView[@index='0']"))
 							.getText();
+
 					total_names = total_names + " ### ### " + stock_name;
 				}
 			}
@@ -993,9 +1018,11 @@ public class MoneyControlAppPage extends MobileKeywords {
 			String[] stock_list = stockname.split("\n");
 			System.out.println("stock_list size is " + stock_list.length);
 			for (int i = 0; i < stock_list.length; i++) {
+
 				if (total_names.contains(stock_list[i])) {
 					System.out.println();
 					System.out.println(stock_list[i] + " addition is successfully performed");
+
 				}
 			}
 		} catch (Throwable e) {
@@ -1003,6 +1030,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 			GlobalUtil.ErrorMsg = e.getMessage();
 			Assert.fail(e.getMessage());
 		}
+
 	}
 
 	public static void user_verifies_stocknames_watchlist(String stockname) {
@@ -1020,14 +1048,20 @@ public class MoneyControlAppPage extends MobileKeywords {
 						.getText();
 				total_names = total_names + " ### ### " + stock_name;
 			}
+			System.out.println();
 			System.out.println("total names are " + total_names);
 
 			String[] stock_list = stockname.split("\n");
 			System.out.println("stock_list size is " + stock_list.length);
 			for (int i = 0; i < 2; i++) {
-				System.out.println(
-						total_names.contains(stock_list[i]) ? stock_list[i] + " addition is successfully performed"
-								: stock_list[i] + " addition is not performed");
+
+				if (total_names.contains(stock_list[i])) {
+
+					System.out.println(stock_list[i] + " addition is successfully performed");
+
+				} else {
+					System.out.println(stock_list[i] + " addition is not performed");
+				}
 			}
 			System.out.println();
 		} catch (Throwable e) {
@@ -1035,6 +1069,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 			GlobalUtil.ErrorMsg = e.getMessage();
 			Assert.fail(e.getMessage());
 		}
+
 	}
 
 	public static void add_all_schemes_to_mutualfunds(String stockname) {
@@ -1073,12 +1108,15 @@ public class MoneyControlAppPage extends MobileKeywords {
 			GlobalUtil.ErrorMsg = e.getMessage();
 			Assert.fail(e.getMessage());
 		}
+
 	}
 
 	public static void add_mutualfunds_toprofile(String stockname) {
 		try {
+			// explicitWaitForElement(mutualfunds_option, type_xpath);
 			KeywordUtil.delay(2000);
 			GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.mutualfunds_option)).click();
+			// KeywordUtil.delay(3000);
 			add_all_schemes_to_mutualfunds(stockname);
 			user_verifies_investment_amounts();
 			user_verifies_stocknames(stockname);
@@ -1087,6 +1125,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 			GlobalUtil.ErrorMsg = e.getMessage();
 			Assert.fail(e.getMessage());
 		}
+
 	}
 
 	public static void add_all_schemes_to_ULIPs(String stockname) {
@@ -1097,6 +1136,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 				System.out.println(ULIPs_list[i]);
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.addstockssymbol)).click();
 				KeywordUtil.delay(2000);
+
 				AndroidElement a = GlobalUtil.getMDriver()
 						.findElement(By.xpath(MoneyControlAppPage.ULIP_enter_scheme_name));
 				a.sendKeys(ULIPs_list[i]);
@@ -1114,6 +1154,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 				explicitWaitForElementforGivenTime(MoneyControlAppPage.OK, MoneyControlAppPage.type_xpath, 10);
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.OK)).click();
 				KeywordUtil.delay(3000);
+
 			}
 		} catch (Throwable e) {
 			GlobalUtil.e = e;
@@ -1124,8 +1165,11 @@ public class MoneyControlAppPage extends MobileKeywords {
 
 	public static void add_ulips_toprofile(String stockname) {
 		try {
+			// explicitWaitForElement(ULIP_option, type_xpath);
 			KeywordUtil.delay(2000);
 			GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.ULIP_option)).click();
+			// KeywordUtil.delay(2000);
+
 			add_all_schemes_to_ULIPs(stockname);
 			System.out.println();
 			user_verifies_investment_amounts();
@@ -1143,6 +1187,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 			String[] Bullions_list = stockname.split("\n");
 			System.out.println("stock_list size is " + Bullions_list.length);
 			for (int i = 0; i < Bullions_list.length; i++) {
+
 				System.out.println(Bullions_list[i]);
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.addstockssymbol)).click();
 				KeywordUtil.delay(1000);
@@ -1153,7 +1198,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.Bullion_enter_quantity))
 						.sendKeys(Bullions_list[i]);
 				KeywordUtil.delay(2000);
-				// ta.tap(230, 806).perform();
+				// ta.tap(230, 806);
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.Bullion_investmentdate_select))
 						.click();
 				explicitWaitForElementforGivenTime(MoneyControlAppPage.OK, MoneyControlAppPage.type_xpath, 10);
@@ -1174,8 +1219,11 @@ public class MoneyControlAppPage extends MobileKeywords {
 
 	public static void add_bullions_toprofile(String stockname) {
 		try {
+			// explicitWaitForElement(Bullion_option, type_xpath);
 			KeywordUtil.delay(2000);
 			GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.Bullion_option)).click();
+			// KeywordUtil.delay(2000);
+
 			add_all_schemes_to_Bullions(stockname);
 			user_verifies_investment_amounts();
 		} catch (Throwable e) {
@@ -1204,15 +1252,20 @@ public class MoneyControlAppPage extends MobileKeywords {
 			String amount = "0";
 			KeywordUtil.delay(2000);
 			for (int i = 1; i < list.size(); i++) {
+
 				amount = GlobalUtil.getMDriver()
 						.findElement(By.xpath("//*[@resource-id='android:id/list']/android.widget.LinearLayout[@index='"
 								+ i + "']/android.widget.LinearLayout/android.widget.TextView"))
 						.getText();
-				if (amount.contains(","))
+
+				if (amount.contains(",")) {
 					amount = amount.replace(",", "");
+				}
+
 				float invest_amount = Float.parseFloat(amount);
 				System.out.println(invest_amount);
 				total_investment = total_investment + invest_amount;
+
 			}
 			System.out.println();
 			System.out.println("total investment is " + total_investment);
@@ -1223,6 +1276,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 			Assert.fail(e.getMessage());
 		}
 		return total_investment;
+
 	}
 
 	public static void enter_stockname_to_watchlist(String stockname) {
@@ -1230,8 +1284,12 @@ public class MoneyControlAppPage extends MobileKeywords {
 			click_addstocks_symbol_mywatchlist();
 			KeywordUtil.delay(1000);
 			String[] stock_list = stockname.split("\n");
+			// System.out.println("stock_list size is " + stock_list.length);
+
 			for (int i = 0; i < 2; i++) {
+
 				System.out.println(stock_list[i]);
+
 				MobileElement sg_stck = GlobalUtil.getMDriver()
 						.findElement(By.xpath(MoneyControlAppPage.enter_stockname_in_watchlist));
 				// sg_stck.sendKeys(stock_list[i]);
@@ -1249,6 +1307,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+
 				KeywordUtil.delay(4000);
 				int x = sg_stck.getLocation().getX();
 				int y = sg_stck.getLocation().getY();
@@ -1257,6 +1316,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 				KeywordUtil.delay(2000);
 				select_suggested_stockname();
 				KeywordUtil.delay(1000);
+
 			}
 			KeywordUtil.delay(1000);
 			MoneyControlAppPage.click_done_watchlist();
@@ -1274,22 +1334,26 @@ public class MoneyControlAppPage extends MobileKeywords {
 
 	public static void select_suggested_stockname() {
 		try {
-			if (isWebElementPresent(MoneyControlAppPage.suggesed_stockname, MoneyControlAppPage.type_xpath)) {
+			if (MobileKeywords.isWebElementPresent(MoneyControlAppPage.suggesed_stockname,
+					MoneyControlAppPage.type_xpath)) {
 				System.out.println("1");
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.suggesed_stockname)).click();
 			}
 			KeywordUtil.delay(2000);
-			if (isWebElementPresent(MoneyControlAppPage.suggesed_stockname1, MoneyControlAppPage.type_xpath)) {
+			if (MobileKeywords.isWebElementPresent(MoneyControlAppPage.suggesed_stockname1,
+					MoneyControlAppPage.type_xpath)) {
 				System.out.println("2");
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.suggesed_stockname1)).click();
 			}
 			// KeywordUtil.delay(2000);
-			if (isWebElementPresent(MoneyControlAppPage.suggesed_stockname2, MoneyControlAppPage.type_xpath)) {
+			if (MobileKeywords.isWebElementPresent(MoneyControlAppPage.suggesed_stockname2,
+					MoneyControlAppPage.type_xpath)) {
 				System.out.println("3");
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.suggesed_stockname2)).click();
 			}
 			// KeywordUtil.delay(2000);
-			if (isWebElementPresent(MoneyControlAppPage.suggesed_stockname3, MoneyControlAppPage.type_xpath)) {
+			if (MobileKeywords.isWebElementPresent(MoneyControlAppPage.suggesed_stockname3,
+					MoneyControlAppPage.type_xpath)) {
 				System.out.println("4");
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.suggesed_stockname3)).click();
 			}
@@ -1304,17 +1368,43 @@ public class MoneyControlAppPage extends MobileKeywords {
 	public static void enter_mfname_to_watchlist(String stockname) throws Exception {
 		try {
 			click_addstocks_symbol_mywatchlist();
+
 			KeywordUtil.delay(2000);
 			String[] stock_list = stockname.split("\n");
 			System.out.println("stock_list size is " + stock_list.length);
+
 			for (int i = 0; i < 2; i++) {
 				System.out.println(stock_list[i]);
+				/*
+				 * WebElement sg_stck =
+				 * GlobalUtil.getMDriver().findElement(By.xpath(
+				 * MoneyControlAppPage. enter_stockname_in_watchlist));
+				 * sg_stck.sendKeys(stock_list[i]);
+				 */
+
 				MobileElement sg_stck = GlobalUtil.getMDriver()
 						.findElement(By.xpath(MoneyControlAppPage.enter_stockname_in_watchlist));
+				// sg_stck.sendKeys(stock_list[i]);
+
+				/***************** JSE **************/
+				// GlobalUtil.getMDriver().executeScript("try{var el =
+				// document.getElementById('com.divum.MoneyControl:id/edt_st_cmp_name');el.value
+				// = '"+stock_list[i]+"';return 0;}catch{return 1;}");
+
 				sg_stck.click();
 				GlobalUtil.getMDriver().getKeyboard().sendKeys(stock_list[i]);
+				/*
+				 * new ProcessBuilder(new String[] { "adb", "-s",
+				 * "34P3Y18903023382", "shell", "input", "text", "" +
+				 * stock_list[i] + "" }).redirectErrorStream(true).start();
+				 */
+				// sg_stck.sendKeys(stock_list[i]);
+
+				// sg_stck.setValue(stock_list[i]);
 				KeywordUtil.delay(4000);
 				mobileTap(230, 600);
+
+				// GlobalUtil.getMDriver().findElement(By.xpath("//*[@resource-id='com.divum.MoneyControl:id/lv_addmutulfundshints']/android.widget.LinearLayout[@index='0']/android.widget.TextView")).click();
 				KeywordUtil.delay(2000);
 				select_suggested_stockname();
 				KeywordUtil.delay(2000);
@@ -1336,12 +1426,32 @@ public class MoneyControlAppPage extends MobileKeywords {
 	public static void enter_commodityname_in_watchlist(String stockname) {
 		try {
 			click_addstocks_symbol_mywatchlist();
+
 			KeywordUtil.delay(1000);
 			String[] stock_list = stockname.split("\n");
+			// System.out.println("stock_list size is " + stock_list.length);
+
 			for (int i = 0; i < 2; i++) {
+
 				System.out.println(stock_list[i]);
+
+				/*
+				 * WebElement sg_stck =
+				 * GlobalUtil.getMDriver().findElement(By.xpath(
+				 * MoneyControlAppPage. enter_stockname_in_watchlist));
+				 * sg_stck.sendKeys(stock_list[i]);
+				 */
+
 				MobileElement sg_stck = GlobalUtil.getMDriver()
 						.findElement(By.xpath(MoneyControlAppPage.enter_stockname_in_watchlist));
+				// sg_stck.sendKeys(stock_list[i]);
+
+				/***************** JSE **************/
+				// GlobalUtil.getMDriver().executeScript("try{var el =
+				// document.getElementById('com.divum.MoneyControl:id/edt_st_cmp_name');el.value
+				// = '"+stock_list[i]+"';return 0;}catch{return 1;}");
+
+				/************** ADB ****************/
 				try {
 					sg_stck.click();
 					new ProcessBuilder(new String[] { "adb", "-s", "34P3Y18903023382", "shell", "input", "text",
@@ -1355,7 +1465,11 @@ public class MoneyControlAppPage extends MobileKeywords {
 				int h = sg_stck.getSize().getHeight();
 				int w = sg_stck.getSize().getWidth();
 				System.out.println("x is : " + x + " y is : " + y + " h is : " + h + " w is: " + w);
+
+				// mobileTap(230, 806);
 				mobileTap(x + h, y + h + 50);
+				// ta.tap(230, 600);
+				// GlobalUtil.getMDriver().findElement(By.xpath("//*[@resource-id='com.divum.MoneyControl:id/lv_addmutulfundshints']/android.widget.LinearLayout[@index='0']/android.widget.TextView")).click();
 				KeywordUtil.delay(2000);
 				select_suggested_stockname();
 				KeywordUtil.delay(1000);
@@ -1397,12 +1511,12 @@ public class MoneyControlAppPage extends MobileKeywords {
 						.findElement(By.xpath(MoneyControlAppPage.enter_stockname_in_watchlist));
 				// sg_stck.sendKeys(stock_list[i]);
 
-				// **************** JSE *************//*
+				// ***************** JSE **************//*
 				// GlobalUtil.getMDriver().executeScript("try{var el =
 				// document.getElementById('com.divum.MoneyControl:id/edt_st_cmp_name');el.value
 				// = '"+stock_list[i]+"';return 0;}catch{return 1;}");
 
-				// ************* ADB ***************//*
+				// ************** ADB ****************//*
 				try {
 					sg_stck.click();
 					new ProcessBuilder(new String[] { "adb", "-s", "34P3Y18903023382", "shell", "input", "text",
@@ -1414,7 +1528,13 @@ public class MoneyControlAppPage extends MobileKeywords {
 				int x = sg_stck.getLocation().getX();
 				int y = sg_stck.getLocation().getY();
 				int h = sg_stck.getSize().getHeight();
+				int w = sg_stck.getSize().getWidth();
+				System.out.println("x is : " + x + " y is : " + y + " h is : " + h + " w is: " + w);
+
+				// mobileTap(230, 806);
 				mobileTap(x + h, y + h + 50);
+				// ta.tap(230, 600);
+				// GlobalUtil.getMDriver().findElement(By.xpath("//*[@resource-id='com.divum.MoneyControl:id/lv_addmutulfundshints']/android.widget.LinearLayout[@index='0']/android.widget.TextView")).click();
 				KeywordUtil.delay(2000);
 				select_suggested_stockname();
 				KeywordUtil.delay(1000);
@@ -1436,10 +1556,22 @@ public class MoneyControlAppPage extends MobileKeywords {
 	public static void enter_currencyname_in_watchlist(String stockname) {
 		try {
 			click_addstocks_symbol_mywatchlist();
+
 			KeywordUtil.delay(1000);
 			String[] stock_list = stockname.split("\n");
+			// System.out.println("stock_list size is " + stock_list.length);
+
 			for (int i = 0; i < 2; i++) {
+
 				System.out.println(stock_list[i]);
+
+				/*
+				 * WebElement sg_stck =
+				 * GlobalUtil.getMDriver().findElement(By.xpath(
+				 * MoneyControlAppPage. enter_stockname_in_watchlist));
+				 * sg_stck.sendKeys(stock_list[i]);
+				 */
+
 				MobileElement sg_stck = GlobalUtil.getMDriver()
 						.findElement(By.xpath(MoneyControlAppPage.enter_stockname_in_watchlist));
 				// sg_stck.sendKeys(stock_list[i]);
@@ -1464,7 +1596,11 @@ public class MoneyControlAppPage extends MobileKeywords {
 				int h = sg_stck.getSize().getHeight();
 				int w = sg_stck.getSize().getWidth();
 				System.out.println("x is : " + x + " y is : " + y + " h is : " + h + " w is: " + w);
+
+				// mobileTap(230, 806);
 				mobileTap(x + h, y + h + 50);
+				// ta.tap(230, 600);
+				// GlobalUtil.getMDriver().findElement(By.xpath("//*[@resource-id='com.divum.MoneyControl:id/lv_addmutulfundshints']/android.widget.LinearLayout[@index='0']/android.widget.TextView")).click();
 				KeywordUtil.delay(2000);
 				select_suggested_stockname();
 				KeywordUtil.delay(1000);
@@ -1499,13 +1635,18 @@ public class MoneyControlAppPage extends MobileKeywords {
 				x = x + text;
 			}
 			System.out.println("x is     " + x);
-			System.out.println(x.contains(stockname) ? "stock addition is verified successfully"
-					: "stock addition is not verified");
+			if (x.contains(stockname)) {
+				System.out.println("stock addition is verified successfully");
+
+			} else {
+				System.out.println("stock addition is not verified");
+			}
 		} catch (Throwable e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
 			Assert.fail(e.getMessage());
 		}
+
 	}
 
 	public static void enter_pro_user_credentials(String proemail, String propassword) {
@@ -1523,10 +1664,12 @@ public class MoneyControlAppPage extends MobileKeywords {
 			GlobalUtil.ErrorMsg = e.getMessage();
 			Assert.fail(e.getMessage());
 		}
+
 	}
 
 	public static void enter_Prousers_details_and_click_login(String Pro_usersID, String Pro_userspassword) {
 		try {
+
 			explicitWaitForElementforGivenTime(MoneyControlAppPage.pro_user_ID, MoneyControlAppPage.type_xpath, 10);
 			GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.pro_user_ID)).sendKeys(Pro_usersID);
 			GlobalUtil.getMDriver().hideKeyboard();
@@ -1671,7 +1814,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 	public static void getcontenthome() {
 		try {
 			KeywordUtil.delay(3000);
-			if (isWebElementPresent(NonproAdds, type_xpath)) {
+			if (MobileKeywords.isWebElementPresent(NonproAdds, type_xpath)) {
 				System.out.println("Non Pro users getting Adds and able to see Adds :Test case Failed");
 
 			} else {
@@ -1745,7 +1888,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 			// System.out.println("elements list size is " + list.size());
 			String x = "";
 			for (int j = 1; j < list.size(); j++) {
-				if (isWebElementPresent(
+				if (MobileKeywords.isWebElementPresent(
 						"//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"
 								+ j
 								+ "']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='2']//android.widget.TextView",
@@ -1763,7 +1906,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 			System.out.println("total is " + x);
 			if (x.contains("-")) {
 				System.out.println("It shows  topgainers and losers values");
-				// takeMobileScreenshot("D:\\MC_CT\\cucumber-java-CT_MC\\target\\cucumber-html-report");
+				// MobileKeywords.takeMobileScreenshot("D:\\MC_CT\\cucumber-java-CT_MC\\target\\cucumber-html-report");
 
 			}
 
@@ -1773,8 +1916,8 @@ public class MoneyControlAppPage extends MobileKeywords {
 				System.out.println("It shows topgainers values only");
 
 			}
-			// GlobalUtil.getMDriver().swipe(383, 1090, 383, 256, 500);
-			// GlobalUtil.getMDriver().swipe(383, 1090, 383, 900, 500);
+			// mobileTapTouchAction(383, 1090, 383, 256, 500);
+			// mobileTapTouchAction(383, 1090, 383, 900, 500);
 
 		} catch (Throwable e) {
 			GlobalUtil.e = e;
@@ -1797,9 +1940,9 @@ public class MoneyControlAppPage extends MobileKeywords {
 					.xpath("//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout"));
 			// System.out.println(list.size());
 			String x = "";
-			// GlobalUtil.getMDriver().swipe(383,1090,383,256,500);
+			// mobileTapTouchAction(383,1090,383,256,500);
 			for (int j = 1; j < list.size(); j++) {
-				if (isWebElementPresent(
+				if (MobileKeywords.isWebElementPresent(
 						"//android.widget.ListView[@resource-id='android:id/list']/android.widget.RelativeLayout[@index='"
 								+ j
 								+ "']/android.widget.LinearLayout/android.widget.RelativeLayout[@index='2']//android.widget.TextView",
@@ -1816,7 +1959,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 			System.out.println("total are " + x);
 			if (x.contains("+")) {
 				System.out.println("It shows  topgainers and losers values");
-				// takeMobileScreenshot("D:\\MC_CT\\cucumber-java-CT_MC\\target\\cucumber-html-report");
+				// MobileKeywords.takeMobileScreenshot("D:\\MC_CT\\cucumber-java-CT_MC\\target\\cucumber-html-report");
 			} else {
 				System.out.println("It shows toplooser values only");
 
@@ -2001,6 +2144,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 			System.out.println();
 			Thread.sleep(2000);
 			GlobalUtil.getMDriver().pressKey(new KeyEvent(AndroidKey.BACK));
+
 			Thread.sleep(2000);
 			GlobalUtil.getMDriver().pressKey(new KeyEvent(AndroidKey.BACK));
 			Thread.sleep(2000);
@@ -2019,7 +2163,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 
 			GlobalUtil.getMDriver().findElement(By.xpath("//*[@text='ET']")).click();
 			Thread.sleep(1000);
-			if (isWebElementPresent("//android.widget.TextView[@text='LATER']", type_xpath)) {
+			if (MobileKeywords.isWebElementPresent("//android.widget.TextView[@text='LATER']", type_xpath)) {
 				GlobalUtil.getMDriver().findElement(By.xpath("//android.widget.TextView[@text='LATER']")).click();
 			}
 			clicketsearch();
@@ -2244,8 +2388,8 @@ public class MoneyControlAppPage extends MobileKeywords {
 	public static void clicksearch() {
 		try {
 
-			if (isWebElementPresent(nse_click_tap, type_xpath)) {
-				click(nse_click_tap, type_xpath);
+			if (MobileKeywords.isWebElementPresent(nse_click_tap, type_xpath)) {
+				MobileKeywords.click(nse_click_tap, type_xpath);
 				Thread.sleep(2000);
 			}
 		} catch (Throwable e) {
@@ -2260,14 +2404,14 @@ public class MoneyControlAppPage extends MobileKeywords {
 		GlobalUtil.getMDriver().openNotifications();
 
 		Thread.sleep(8000);
-		click(notificationTitles, type_xpath);
+		MobileKeywords.click(notificationTitles, type_xpath);
 
 	}
 
 	public static void activeByValue() {
 		try {
 			Thread.sleep(4000);
-			click(Activeby_value, type_xpath);
+			MobileKeywords.click(Activeby_value, type_xpath);
 		} catch (Throwable e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
@@ -2371,8 +2515,8 @@ public class MoneyControlAppPage extends MobileKeywords {
 		for (int i = 0; i < 3; i++) {
 			// t.press(x+850,
 			// y+80).waitAction(Duration.ofMillis(2000)).moveTo(x+200,
-			// y+80).release().perform();
-			// t.press(800,630).waitAction(Duration.ofMillis(3000)).moveTo(100,630).release().perform();
+			// y+80).release();
+			// t.press(800,630).waitAction(Duration.ofMillis(3000)).moveTo(100,630).release();
 			Dimension dim = GlobalUtil.getMDriver().manage().window().getSize();
 			int height = dim.getHeight();
 			int width = dim.getWidth();
@@ -2411,6 +2555,10 @@ public class MoneyControlAppPage extends MobileKeywords {
 		System.out.println(news_text_homepage_first);
 		// news_time[0]=news_text_homepage_first;
 		for (int i = 0; i < 3; i++) {
+			// t.press(x+850,
+			// y+80).waitAction(Duration.ofMillis(2000)).moveTo(x+200,
+			// y+80).release();
+			// t.press(800,630).waitAction(Duration.ofMillis(3000)).moveTo(100,630).release();
 			KeywordUtil.delay(1000);
 			Dimension dim = GlobalUtil.getMDriver().manage().window().getSize();
 			int height = dim.getHeight();
@@ -2421,12 +2569,14 @@ public class MoneyControlAppPage extends MobileKeywords {
 			mobileSwipeTouchAction(startx, y1, endx, y1, 1000);
 			String news_text_homepage = ae.getText();
 			System.out.println(news_text_homepage);
+			// news_time[i+1]=news_text_homepage;
 		}
 		KeywordUtil.delay(1000);
 		AndroidElement ae2 = GlobalUtil.getMDriver().findElement(By.xpath(
 				"//android.support.v7.widget.RecyclerView/android.view.ViewGroup[@index='1']/android.widget.TextView[@index='1']"));
 		String news_text_homepage_last = ae2.getText();
 		System.out.println(news_text_homepage_last);
+		// news_time[4]=news_text_homepage_first;
 		System.out.println();
 		/*
 		 * for(int i=0;i<news_time.length;i++) {
@@ -2497,7 +2647,6 @@ public class MoneyControlAppPage extends MobileKeywords {
 			System.out.println();
 		}
 		Integer total_time[] = new Integer[7];
-
 		boolean Newshrs = true;
 		for (int i = 0; i < 7; i++) {
 			total_time[i] = hrs[i] * 60 * 60 + mins[i] * 60 + secs[i];
@@ -2527,7 +2676,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 	}
 
 	public static void topnews_page_triggered() {
-		if (isWebElementPresent(Top_News_page_text, type_xpath)) {
+		if (MobileKeywords.isWebElementPresent(Top_News_page_text, type_xpath)) {
 			System.out.println(" Top News heading in homepage is triggering to TopNews page : Test passed");
 		} else {
 			System.out.println(" Top News heading in homepage is not triggering to TopNews page : Test failed");
