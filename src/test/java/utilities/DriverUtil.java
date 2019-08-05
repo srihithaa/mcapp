@@ -1,6 +1,5 @@
 package utilities;
 
-import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +11,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * This DriverUtil class refer to browsers, os details, browser versions and
@@ -107,16 +108,14 @@ public class DriverUtil {
 				if (browserName.equalsIgnoreCase(CHROME)) {
 					browser = drivers.get(browserName);
 					if (browser == null) {
-						File chromeExecutable = new File(ConfigReader.getValue("ChromeDriverPath"));
-						System.setProperty("webdriver.chrome.driver", chromeExecutable.getAbsolutePath());
+						WebDriverManager.chromedriver().setup();
 						browser = new ChromeDriver();
 						drivers.put("Chrome", browser);
 					}
 				} else if (browserName.equalsIgnoreCase(IE)) {
 					browser = drivers.get(browserName);
 					if (browser == null) {
-						File ieExecutable = new File(ConfigReader.getValue("IEDriverPath"));
-						System.setProperty("webdriver.ie.driver", ieExecutable.getAbsolutePath());
+						WebDriverManager.iedriver().setup();
 						DesiredCapabilities capabilitiesIE = DesiredCapabilities.internetExplorer();
 						capabilitiesIE.setCapability("ie.ensureCleanSession", true);
 						capabilitiesIE.setCapability(InternetExplorerDriver.ENABLE_ELEMENT_CACHE_CLEANUP, true);
@@ -129,9 +128,7 @@ public class DriverUtil {
 				else {
 					browser = drivers.get("Firefox");
 					if (browser == null) {
-						File geckoExecutable = new File(ConfigReader.getValue("GeckoDriverPath"));
-						System.out.println(geckoExecutable.getAbsolutePath());
-						System.setProperty("webdriver.gecko.driver", geckoExecutable.getAbsolutePath());
+						WebDriverManager.firefoxdriver().setup();
 						browser = new FirefoxDriver();
 						drivers.put("Firefox", browser);
 					}

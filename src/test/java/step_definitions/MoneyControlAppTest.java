@@ -36,13 +36,19 @@ public class MoneyControlAppTest extends MobileKeywords {
 	public static HashMap<String, String> dataMap = new HashMap<String, String>();
 
 	@Given("^User Open MoneyControl$")
-	public void openapp() {
+	public void openApp() {
 		GlobalUtil.getMobileApp();
 	}
 
 	@When("^User clicks on profile icon$")
 	public void user_clicks_profileIcon() {
-		MoneyControlAppPage.click_profileicon();
+		try {
+			MoneyControlAppPage.clickProfileIcon();
+		} catch (Exception e) {
+			GlobalUtil.e = e;
+			GlobalUtil.ErrorMsg = e.getMessage();
+			Assert.fail(e.getMessage());
+		}
 	}
 
 	@When("^User Click on Menu$")
@@ -56,7 +62,6 @@ public class MoneyControlAppTest extends MobileKeywords {
 
 	@Then("^User Click on MyPortfolio$")
 	public void clickMyPortfolio() {
-
 		Assert.assertEquals(
 				GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.myportfoliobutton)).getText(),
 				"My Portfolio", "My portfolio link is visible");
@@ -125,14 +130,11 @@ public class MoneyControlAppTest extends MobileKeywords {
 
 	@When("^Enter email, password and click login$")
 	public void loginwithEmailfromExcel() {
-
 		explicitWaitForElementforGivenTime(MoneyControlAppPage.emailoruserid, MoneyControlAppPage.type_xpath, 10);
 		GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.emailoruserid)).sendKeys(dataMap.get("Email"));
 		GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.emailpassword))
 				.sendKeys(dataMap.get("Password"));
-
 		// GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.emaillogin)).click();
-
 	}
 
 	@And("^User enters facebook details and click login$")
@@ -149,7 +151,6 @@ public class MoneyControlAppTest extends MobileKeywords {
 	@And("^User verifies login page and click on logout$")
 	public void verifyloginpage() {
 		MoneyControlAppPage.verify_loginpage(dataMap.get("Email"));
-
 	}
 
 	@And("^User Clicks on Login with google$")
@@ -558,18 +559,6 @@ public class MoneyControlAppTest extends MobileKeywords {
 		}
 	}
 
-	@Then("^User Click on MCProfile$")
-	public void user_Click_on_Profile() {
-		try {
-
-			MoneyControlAppPage.clickprofile();
-		} catch (Exception e) {
-			GlobalUtil.e = e;
-			GlobalUtil.ErrorMsg = e.getMessage();
-			Assert.fail(e.getMessage());
-		}
-	}
-
 	@Given("^User open Mobile notifications$")
 	public void Open_notification_bar() {
 		try {
@@ -687,7 +676,7 @@ public class MoneyControlAppTest extends MobileKeywords {
 
 	@When("^User verify After kill the App and relaunch MC app, pro User are logged in or not$")
 	public void user_verify_After_kill_the_App_and_relaunch_MC_app_pro_User_are_logged_in_or_not() throws Throwable {
-		MoneyControlAppPage.click_profileicon();
+		MoneyControlAppPage.clickProfileIcon();
 		String loginbt = GlobalUtil.getMDriver().findElement(By.xpath(MoneyControlAppPage.emaillogin)).getText();
 		System.out.println();
 		System.out.println("Re-launch app cheking ext   :" + loginbt);
@@ -839,19 +828,6 @@ public class MoneyControlAppTest extends MobileKeywords {
 		}
 	}
 
-	@Then("^User_Click on MCProfile$")
-	public void user_Click_on_Profile1() throws Throwable {
-
-		try {
-
-			MoneyControlAppPage.clickprofile();
-		} catch (Exception e) {
-			GlobalUtil.e = e;
-			GlobalUtil.ErrorMsg = e.getMessage();
-			Assert.fail(e.getMessage());
-		}
-	}
-
 	@And("^Read \"(.*)\" from Excel_file$")
 	public void given_Read_the_test_data_from_Excel_file(String arg1) {
 		try {
@@ -871,7 +847,7 @@ public class MoneyControlAppTest extends MobileKeywords {
 
 		try {
 			Thread.sleep(3000);
-			MoneyControlAppPage.getcontenthome();
+			MoneyControlAppPage.getContentHome();
 			MoneyControlAppPage.clickProfilelogout();
 			MoneyControlAppPage.clicklogout();
 			Assert.assertNotEquals(MoneyControlAppPage.pro_user_indices, "Indices",

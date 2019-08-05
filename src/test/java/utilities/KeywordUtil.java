@@ -51,39 +51,21 @@ public class KeywordUtil extends GlobalUtil {
 	public static Xlsx_Reader AutomationDataSheet;
 
 	public static void onExecutionFinish() {
-		/*
-		 * // TODO Auto-generated method stub LogUtil.infoLog("TestProcessEnd",
-		 * "Test process has ended");
-		 * 
-		 * // Send Mail functionality if
-		 * (GlobalUtil.getCommonSettings().getEmailOutput().equalsIgnoreCase("Y"
-		 * )) try { //SendMail.sendEmailToClient(); } catch (IOException e1) {
-		 * // TODO Auto-generated catch block //e1.printStackTrace(); } catch
-		 * (MessagingException e1) { // TODO Auto-generated catch block
-		 * //e1.printStackTrace(); } //2. Extenet Report Finish
-		 * 
-		 * 
-		 * //3. Report open for view
-		 */
-		String htmlReportFile = System.getProperty("user.dir") + "\\" + ConfigReader.getValue("HtmlReportFullPath");
+		String htmlReportFile = System.getProperty("user.dir") + "/" + ConfigReader.getValue("HtmlReportFullPath");
 		System.out.println("cucumber path is" + htmlReportFile);
 		File f = new File(htmlReportFile);
-		if (f.exists()) {
-
+		if (f.exists())
 			try {
 				Runtime.getRuntime().exec(
 						"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe \"" + htmlReportFile + "\"");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-
 		if (cucumberTagName.equals("Mobile") || cucumberTagName.equals("Web")) {
 			String htmlExtentReportFile = System.getProperty("user.dir") + "\\"
 					+ ConfigReader.getValue("extentReportPath");
 			File extentReport = new File(htmlExtentReportFile);
 			if (extentReport.exists()) {
-
 				try {
 					Runtime.getRuntime().exec("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe \""
 							+ htmlExtentReportFile + "\"");

@@ -1,5 +1,4 @@
 package mcWebPages;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -177,7 +176,6 @@ public class MoneyControlAppPage extends MobileKeywords {
 	public static String ETcancel = "//*[@resource-id='com.et.reader.activities:id/rating_close']";
 	public static String ETlater = "//*[@resource-id='com.et.reader.activities:id/btn_later']";
 	public static String money_control_pro = "//*[@text='Moneycontrol Pro']";
-	public static String users_Profile = "//*[@resource-id='com.divum.MoneyControl:id/header_user_icon_img']";
 	public static String pro_user_ID = "//*[@resource-id='com.divum.MoneyControl:id/loginEmailET']";
 	public static String pro_user_password = "//*[@resource-id='com.divum.MoneyControl:id/loginePassET']";
 	public static String pro_user_alert_OK_bt = "//*[@text='OK']";
@@ -339,12 +337,11 @@ public class MoneyControlAppPage extends MobileKeywords {
 
 	}
 
-	public static void click_profileicon() {
+	public static void clickProfileIcon() {
 		try {
 			// wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(portfolio_profile)));
 			explicitWaitForElementforGivenTime(portfolio_profile, type_xpath, 10);
 			click(portfolio_profile, type_xpath);
-
 		} catch (Throwable e) {
 			GlobalUtil.e = e;
 			GlobalUtil.ErrorMsg = e.getMessage();
@@ -1784,34 +1781,7 @@ public class MoneyControlAppPage extends MobileKeywords {
 		}
 	}
 
-	public static void clickprofile() {
-		try {
-			KeywordUtil.delay(3000);
-			explicitWaitForElementforGivenTime(users_Profile, type_xpath, 10);
-			click(users_Profile, type_xpath);
-			// Assert.assertEquals(MoneycontrolHomepage2.profile_iconn,"Login",
-			// "Moneycontrol Pro user profile Verified");
-
-		} catch (Throwable e) {
-			GlobalUtil.e = e;
-			GlobalUtil.ErrorMsg = e.getMessage();
-			Assert.fail(e.getMessage());
-		}
-	}
-
-	public static void clickalertbt() {
-
-		if (KeywordUtil.isWebElementPresent(OK, type_xpath)) {
-			KeywordUtil.delay(3000);
-			// explicitWaitForElementforGivenTime(OK, type_xpath, 10);
-			click(OK, type_xpath);
-			// Assert.assertEquals(MoneycontrolHomepage2.profile_iconn,"Login",
-			// "Moneycontrol Pro user profile Verified");
-		}
-
-	}
-
-	public static void getcontenthome() {
+	public static void getContentHome() {
 		try {
 			KeywordUtil.delay(3000);
 			if (MobileKeywords.isWebElementPresent(NonproAdds, type_xpath)) {

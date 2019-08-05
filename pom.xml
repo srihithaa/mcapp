@@ -252,6 +252,12 @@
 			<version>1.7.19</version>
 		</dependency>
 		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<version>3.6.2</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-jdk14</artifactId>
 			<version>1.7.19</version>
@@ -263,6 +269,7 @@
 			<artifactId>java-client</artifactId>
 			<version>7.1.0</version>
 		</dependency>
+
 	</dependencies>
 	<build>
 		<pluginManagement>

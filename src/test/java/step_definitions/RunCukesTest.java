@@ -98,7 +98,7 @@ public class RunCukesTest extends AbstractTestNGCucumberTests {
 	@After
 	public void afterAndroidWebTestMethod(Scenario scenario) {
 		if (scenario.isFailed()) {
-			String screenshotFilePath = ConfigReader.getValue("screenshotPath") + "\\" + "ScreenShot_"
+			String screenshotFilePath = ConfigReader.getValue("screenshotPath") + "/" + "ScreenShot_"
 					+ System.currentTimeMillis() + ".png";
 			try {
 				imagePath = HTMLReportUtil.testFailMobileTakeScreenshot(screenshotFilePath);
