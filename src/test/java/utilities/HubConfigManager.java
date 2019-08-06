@@ -34,20 +34,20 @@ public class HubConfigManager {
 	public static String appPackage;
 
 	public void main() {
-		String seleniumPath = System.getProperty("user.dir") + "/lib/selenium-server-standalone-3.141.59.jar";
+		String seleniumPath = System.getProperty("user.dir") + "/lib/selenium-server-standalone-3.2.0.jar";
 		if (!new File(seleniumPath).exists())
-			downloadFileFromInternet("https://bit.ly/2TlkRyu", seleniumPath);
-		KeywordUtil.delay(5000);
+			downloadFileFromInternet("https://selenium-release.storage.googleapis.com/3.2/selenium-server-standalone-3.2.0.jar", seleniumPath);
+		KeywordUtil.delay(3000);
 		startSeleniumGrid();
 		HubConfigManager.appiumURL = updateJSON();
-		KeywordUtil.delay(3000);
+		KeywordUtil.delay(5000);
 		hookMobileNodeToGrid();
 		// To unlock Device use "adb shell input keyevent 224"
 	}
 
 	public void startSeleniumGrid() {
 		excCommandNewWindow("java -jar " + System.getProperty("user.dir")
-				+ "/lib/selenium-server-standalone-3.141.59.jar -role hub -port " + hubPort);
+				+ "/lib/selenium-server-standalone-3.2.0.jar -role hub -port " + hubPort);
 	}
 
 	public void hookMobileNodeToGrid() {
