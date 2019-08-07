@@ -1,28 +1,21 @@
 # Money Control Automation Framework
-
 ## Introduction
 This document helps to configure MoneyControl automation framework in Windows machine.
-
 ## Pre-requisites
 The following list of software need to be installed as part of Money Control automation set-up:
-
 |Software Name|Versions|
 |---------------|---------|
 |[Java SDK](#java-sdk) |8 or later|
-|[GitHub Desktop](https://desktop.github.com/)|1.3.0 or later|
 |[Eclipse IDE](#eclipse-ide)|Oxygen or later|
 |testNG|6.10 or later|
-|~~[jenkins](https://jenkins.io/download/)~~|~~2.121.3 or later~~|
+|[jenkins](https://jenkins.io/download/)|2.121.3 or later|
    
-
 ### Java SDK
 Refer [link](https://docs.oracle.com/javase/7/docs/webnotes/install/windows/jdk-installation-windows.html) for detailed steps to set-up Java SDK in Microsoft Windows machine.
-
 ### GitHub Desktop
  - [Download](https://desktop.github.com/) and install GitHub Desktop
  - Once the installation is done go to GitHub Desktop root folder(usually resides at C:/Users/*YourUserName*/AppData/Local/GitHubDesktop) and run *GitHubDesktop.exe* as administrator
  
-![gitClone](https://www.codeblogbt.com/img/2018/06/13/1341100-20180604221443885-293380504.jpg)
 **Note:** You have to fork [main repo]( https://github.com/txpertsmc/TXMCFramework.git) to your account from web browser before proceeding with the next step.
  - Click on **Clone a repository** button and login with your git credentials and select your forked version of MoneyControl Automation framework repo(Something looks like *<yourID>/TXMCFramework.git*)
  - Select appropriate local path(e.g., D:/git/) to where you want to clone the repository and click on **clone** button.
@@ -57,7 +50,6 @@ You can execute any test suite using any of the following ways:
  |`reports/`|Contains reports generated during execution.|
  |`pom.xml`|Project build file.|
  
- 
 ### Coding Standards
 **1.Format the code before pulling code from main repo.**
  - Ctrl+Shift+O -> for auto-import dependencies
@@ -72,7 +64,13 @@ You can execute any test suite using any of the following ways:
  - Any method should not throw any exception
  - Every exception need to be handled within the scope
  
-### Common Errors and possible fixes
+ ### Common Errors and possible fixes
 **Not able to execute scripts in IE**
  - Make sure that browser zoom level is set to 100%; IE browser View menu --> Zoom --> 100%
- - Make sure that "protection mode" is enabled for all the zones; IE browser Tools menu --> Internet Options --> Security tab --> navigate to Internet, Local intranet, Trusted sites and Restricted site and check Protection Mode checkbox is checked.
+ - Make sure that "protection mode" is enabled for all the zones; IE browser Tools menu --> Internet Options --> Security tab --> navigate to Internet, Local intranet, Trusted sites and Restricted site and check Protection Mode checkbox is checked
+
+### Setup and usage of HubConfigManager
+ - [Download](https://nodejs.org/en/download/) and install npm
+ - Install appium CLI through npm using command 
+ `npm install -g appium`
+ - Call main method of HubConfigManager class in your runner class
