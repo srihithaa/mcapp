@@ -1,4 +1,4 @@
-package mobileutil;
+package utilities;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,9 +44,6 @@ import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.ElementOption;
 import io.appium.java_client.touch.offset.PointOption;
 import step_definitions.RunCukesTest;
-import utilities.GlobalUtil;
-import utilities.KeywordUtil;
-import utilities.LogUtil;
 
 @SuppressWarnings("rawtypes")
 public class MobileKeywords {

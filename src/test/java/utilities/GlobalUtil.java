@@ -23,8 +23,6 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
-//import jirautil.JiraUtil;
-import mobileutil.MobileKeywords;
 
 /**
  * This class will get date and time and it will rename the file with date and
@@ -70,8 +68,8 @@ public class GlobalUtil extends MobileKeywords {
 	public static final String PROPERTYAGENTKEY = "Agent";
 	public static final String PROPERTYNOTEKEY = "Note";
 	public static DesiredCapabilities capabilities = new DesiredCapabilities();
-	public static String appium_ip_address = mobileutil.MobileKeywords.getValue("appium_ip_address");
-	public static String appium_port = mobileutil.MobileKeywords.getValue("appium_port");
+	public static String appium_ip_address = utilities.MobileKeywords.getValue("appium_ip_address");
+	public static String appium_port = utilities.MobileKeywords.getValue("appium_port");
 
 	protected static final HashMap<String, String> popupCurrentData = new HashMap<String, String>();
 

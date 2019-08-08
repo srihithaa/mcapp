@@ -19,7 +19,6 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import mobileutil.MobileKeywords;
 
 /**
  * This DriverUtil class refer to browsers, os details, browser versions and
@@ -37,8 +36,8 @@ public class DriverUtil {
 
 	public static WebDriver driver = null;
 	private static HashMap<String, String> checkLogin = new HashMap<>();
-	public static String appium_ip_address = mobileutil.MobileKeywords.getValue("appium_ip_address");
-	public static String appium_port = mobileutil.MobileKeywords.getValue("appium_port");
+	public static String appium_ip_address = utilities.MobileKeywords.getValue("appium_ip_address");
+	public static String appium_port = utilities.MobileKeywords.getValue("appium_port");
 	public static DesiredCapabilities capabilities = new DesiredCapabilities();
 
 	public static AppiumDriver<MobileElement> getMDriver(String osAppType) {

@@ -11,10 +11,10 @@ import com.relevantcodes.extentreports.LogStatus;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import locators.ios.HomePageLocators;
-import mobileutil.MobileKeywords;
 import step_definitions.RunCukesTest;
 import utilities.GlobalUtil;
 import utilities.KeywordUtil;
+import utilities.MobileKeywords;
 
 public class HomePageAppStepImpl extends HomePageLocators {
 

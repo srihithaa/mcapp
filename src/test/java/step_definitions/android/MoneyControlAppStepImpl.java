@@ -25,12 +25,12 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import locators.android.MoneyControlLocators;
-import mobileutil.MobileKeywords;
 import step_definitions.RunCukesTest;
 import utilities.ExcelDataUtil;
 import utilities.GlobalUtil;
 import utilities.HTMLReportUtil;
 import utilities.KeywordUtil;
+import utilities.MobileKeywords;
 
 public class MoneyControlAppStepImpl extends MobileKeywords implements MoneyControlLocators {
 
