@@ -40,11 +40,11 @@ public class HubConfigManager {
 					"https://selenium-release.storage.googleapis.com/3.2/selenium-server-standalone-3.2.0.jar",
 					seleniumPath);
 		startSeleniumGrid();
-		// HubConfigManager.appiumURL = updateAndroidJSON();
-		HubConfigManager.appiumURL = updateiOSJSON();
-		KeywordUtil.delay(1000);
-		// hookAndroidNodeToGrid();
-		hookiOSNodeToGrid();
+		 HubConfigManager.appiumURL = updateAndroidJSON();
+		//HubConfigManager.appiumURL = updateiOSJSON();
+		KeywordUtil.delay(10000);
+		 hookAndroidNodeToGrid();
+		//hookiOSNodeToGrid();
 
 		// To unlock Device use "adb shell input keyevent 224"
 	}
@@ -130,7 +130,8 @@ public class HubConfigManager {
 		appPackage = capsObj.get("appPackage").toString();
 		if (!capsObj.get("app").toString().isEmpty())
 			capsObj.remove("app");
-		capsObj.put("app", System.getProperty("user.dir").replace("\\", "/") + "/src/test/resources/APK/base.apk");
+		capsObj.put("app", System.getProperty("user.dir").replace("\\", "/") + "/src/test/resources/app/"
+				+ ConfigReader.getValue("apkFileName") + ".apk");
 		app = (String) capsObj.get("app");
 		InetAddress inetAddress;
 		String myIP = null;
@@ -190,7 +191,7 @@ public class HubConfigManager {
 		if (!capsObj.get("app").toString().isEmpty())
 			capsObj.remove("app");
 		capsObj.put("app",
-				System.getProperty("user.dir").replace("\\", "/") + "/src/test/resources/APK/moneycontrol.ipa");
+				System.getProperty("user.dir").replace("\\", "/") + "/src/test/resources/app/moneycontrol.ipa");
 		app = (String) capsObj.get("app");
 		InetAddress inetAddress;
 		String myIP = null;

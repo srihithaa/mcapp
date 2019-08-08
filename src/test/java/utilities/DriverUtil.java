@@ -47,30 +47,29 @@ public class DriverUtil {
 			if (osAppType.contains("wap"))
 				capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "Chrome");
 			else if (osAppType.contains("app")) {
-				capabilities.setCapability("appPackage", "com.divum.MoneyControl");
+				capabilities.setCapability("appPackage", HubConfigManager.appPackage);
 				capabilities.setCapability("appActivity", "com.moneycontrol.handheld.SplashActivity");
-				capabilities.setCapability("app", "src/test/resources/APK/base.apk");
+				capabilities.setCapability("app", HubConfigManager.app);
 			}
-			capabilities.setCapability(MobileCapabilityType.DEVICE_NAME,
-					GlobalUtil.getCommonSettings().getAndroidName());
+			capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, HubConfigManager.deviceName);
 			// capabilities.setCapability(MobileCapabilityType.DEVICE_NAME,
 			// MobileKeywords.GetValue("ID"));
-			capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION,
-					GlobalUtil.getCommonSettings().getAndroidVersion());
-			capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobileKeywords.getValue("platformName"));
-			capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, MobileKeywords.getValue("automationName"));
+			capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, HubConfigManager.platformVersion);
+			capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
+			capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "appium");
 			capabilities.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, "180");
 			// capabilities.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT,MobileKeywords.GetValue("newCommandTimeout"));
 			WebDriverManager.chromedriver().setup();
 			// capabilities.setCapability("chromedriverExecutable",System.getProperty("user.dir")+"\\"+MobileKeywords.GetValue("AndroidChromeDriverPath"));
 			capabilities.setCapability("autoGrantPermissions", true);
+			capabilities.setCapability("disableWindowAnimation", true);
 			capabilities.setCapability("autoAcceptAlerts", true);
 			// File app = new File(MobileKeywords.GetValue("apkFilePath"));
 			// capabilities.setCapability(MobileCapabilityType.APP,
 			// app.getAbsolutePath());
 			try {
 				driver = new AndroidDriver<MobileElement>(
-						new URL("http://" + appium_ip_address + ":" + appium_port + "/wd/hub"), capabilities);
+						new URL(HubConfigManager.appiumURL), capabilities);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
@@ -104,16 +103,17 @@ public class DriverUtil {
 			// capabilities.setCapability("udid", "00008020-000961D926F1002E");
 
 			capabilities.setCapability("autoAcceptAlerts", true);
-			 capabilities.setCapability("updatedWDABundleId","com.facebooktx1234.WebDriverAgentRunner");
+			capabilities.setCapability("updatedWDABundleId", "com.facebooktx1234.WebDriverAgentRunner");
 
-			//capabilities.setCapability("xcodeOrgId", "Test TX");
-		//	 capabilities.setCapability("xcodeSigningId", "iPhone Developer");
+			// capabilities.setCapability("xcodeOrgId", "Test TX");
+			// capabilities.setCapability("xcodeSigningId", "iPhone Developer");
 
 			// capabilities.setCapability("useNewWDA", true);
-			//capabilities.setCapability("xcodeConfigfile",
-				//	"/Applications/Appium.app/Contents/WebDriverAgent/WebDriverAgent.xcodeproj");
-			capabilities.setCapability("xcodeConfigfile","/Users/damco/.npm-global/lib/node_modules/appium/node_modules/appium-xcuitest-driver/WebDriverAgent/WebDriverAgent.xcodeproj");
-			 try {
+			// capabilities.setCapability("xcodeConfigfile",
+			// "/Applications/Appium.app/Contents/WebDriverAgent/WebDriverAgent.xcodeproj");
+			capabilities.setCapability("xcodeConfigfile",
+					"/Users/damco/.npm-global/lib/node_modules/appium/node_modules/appium-xcuitest-driver/WebDriverAgent/WebDriverAgent.xcodeproj");
+			try {
 				driver = new IOSDriver<MobileElement>(new URL(HubConfigManager.appiumURL), capabilities);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();

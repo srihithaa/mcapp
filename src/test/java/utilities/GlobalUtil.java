@@ -95,7 +95,7 @@ public class GlobalUtil extends MobileKeywords {
 //			System.err.println("Unable to launch application in Android device.");
 //		}
 //	
-		return DriverUtil.getMDriver("iosapp");
+		return DriverUtil.getMDriver("androidapp");
 	// Mdriver;
 	}
 
