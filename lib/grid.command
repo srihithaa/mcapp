@@ -1,0 +1,1 @@
+java -jar /Users/damco/Desktop/git/mcapp/lib/selenium-server-standalone-3.2.0.jar -role hub -port 1223

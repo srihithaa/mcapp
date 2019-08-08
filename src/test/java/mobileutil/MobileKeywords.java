@@ -38,8 +38,8 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.PerformsTouchActions;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.AndroidElement;
-import io.appium.java_client.touch.TapOptions;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.ElementOption;
 import io.appium.java_client.touch.offset.PointOption;
@@ -68,7 +68,6 @@ public class MobileKeywords {
 	private static ExtentTest testHist = null;
 	static PatternLayout patternLayout = new PatternLayout("%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n");
 	static PatternLayout consolePatternLayout = new PatternLayout("\tLOG-: [%m -  %d{yyyy-MM-dd HH:mm:ss a}] %n");
-	public static AndroidDriver<AndroidElement> driver1 = GlobalUtil.getMDriver();
 
 	static TouchAction ta;
 	public static DesiredCapabilities capabilities = new DesiredCapabilities();
@@ -88,6 +87,13 @@ public class MobileKeywords {
 			ta = new TouchAction((PerformsTouchActions) GlobalUtil.getMDriver());
 		}
 		return ta;
+	}
+
+	public static void navigateToUrl(String url) {
+		try {
+			GlobalUtil.getMDriver().get(url);
+		} catch (Exception e) {
+		}
 	}
 
 	public static String getValue(String key) {
@@ -157,7 +163,7 @@ public class MobileKeywords {
 	}
 
 	public static boolean isWebElementNotPresent(String path, String type) {
-		List<AndroidElement> elements = GlobalUtil.getMDriver().findElements(locatortype(type, path));
+		List<MobileElement> elements = GlobalUtil.getMDriver().findElements(locatortype(type, path));
 		if (elements.size() > 0) {
 			LogUtil.infoLog(thisClass, "Element present");
 			return false;
@@ -185,10 +191,10 @@ public class MobileKeywords {
 	}
 
 	public static boolean enterInput(String path, String type, String data, String logstep) {
-		WebElement element = GlobalUtil.getMDriver().findElement(By.xpath(path));
+		WebElement element = GlobalUtil.getMDriver().findElement(locatortype(type, path));
 		((JavascriptExecutor) GlobalUtil.getMDriver()).executeScript("arguments[0].value = arguments[1]", element,
 				data);
-		System.out.println("Value Entered");
+		RunCukesTest.logger.log(LogStatus.PASS, logstep);
 		return true;
 	}
 
@@ -299,7 +305,7 @@ public class MobileKeywords {
 
 	public static boolean verifyElementSize(String path, String type, int size) {
 
-		List<AndroidElement> elements = GlobalUtil.getMDriver().findElements(locatortype(type, path));
+		List<MobileElement> elements = GlobalUtil.getMDriver().findElements(locatortype(type, path));
 
 		if (elements.size() == size) {
 			System.out.println("Element is Present " + size + "times");
@@ -653,5 +659,21 @@ public class MobileKeywords {
 
 	public static void mobileTap(WebElement e) {
 		getTA().tap(ElementOption.element(e)).release().perform();
+	}
+
+	public static void pressKeyAndroid(AndroidKey key) {
+		((AndroidDriver) GlobalUtil.getDriver()).pressKey(new KeyEvent(key));
+	}
+
+	public static void openNotificationsAndroid() {
+		((AndroidDriver) GlobalUtil.getDriver()).openNotifications();
+	}
+
+	public static void lockDeviceAndroid() {
+		((AndroidDriver) GlobalUtil.getDriver()).lockDevice();
+	}
+
+	public void unlockDeviceAndroid() {
+		((AndroidDriver) GlobalUtil.getDriver()).lockDevice();
 	}
 }

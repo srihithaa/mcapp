@@ -19,8 +19,9 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.remote.MobileCapabilityType;
 //import jirautil.JiraUtil;
 import mobileutil.MobileKeywords;
@@ -35,7 +36,7 @@ public class GlobalUtil extends MobileKeywords {
 	private static CommonSettings commonSettings = new CommonSettings();
 	private static WebDriver driver = null;
 
-	private static AndroidDriver<AndroidElement> Mdriver = null;
+	private static AppiumDriver<MobileElement> Mdriver = null;
 	private static int totalSuites = 0;
 	private static boolean suitesRunStarted = false;
 	private static int lastRunId = 0;
@@ -74,28 +75,31 @@ public class GlobalUtil extends MobileKeywords {
 
 	protected static final HashMap<String, String> popupCurrentData = new HashMap<String, String>();
 
-	public static AndroidDriver<AndroidElement> getMobileApp() {
-		capabilities.setCapability("deviceName", HubConfigManager.deviceName);
-		capabilities.setCapability("platformVersion", HubConfigManager.platformVersion);
-		capabilities.setCapability("app", HubConfigManager.app);
-		capabilities.setCapability("appPackage", HubConfigManager.appPackage);
-		capabilities.setCapability("autoGrantPermissions", true);
-		capabilities.setCapability("autoAcceptAlerts", true);
-		capabilities.setCapability("disableWindowAnimation ", true);
-		try {
-			URL url = new URL(HubConfigManager.appiumURL);
-			System.out.println(url);
-			while (2 > 1) {
-				Mdriver = new AndroidDriver<>(url, capabilities);
-				break;
-			}
-		} catch (MalformedURLException e) {
-			System.err.println("Unnable to launch application in Android device.");
-		}
-		return Mdriver;
+	public static AppiumDriver<MobileElement> getMobileApp() {
+//		capabilities.setCapability("deviceName", HubConfigManager.deviceName);
+//		capabilities.setCapability("platformVersion", HubConfigManager.platformVersion);
+//		capabilities.setCapability("app", HubConfigManager.app);
+//		capabilities.setCapability("appPackage", HubConfigManager.appPackage);
+//		capabilities.setCapability("autoGrantPermissions", true);
+//		capabilities.setCapability("autoAcceptAlerts", true);
+//		// use only for Android 
+//		//capabilities.setCapability("disableWindowAnimation", true);
+//		try {
+//			URL url = new URL(HubConfigManager.appiumURL);
+//			System.out.println(url);
+//			while (2 > 1) {
+//				Mdriver = new AppiumDriver<>(url, capabilities);
+//				break;
+//			}
+//		} catch (MalformedURLException e) {
+//			System.err.println("Unable to launch application in Android device.");
+//		}
+//	
+		return DriverUtil.getMDriver("iosapp");
+	// Mdriver;
 	}
 
-	public static AndroidDriver<AndroidElement> getMobileBrowser() {
+	public static AppiumDriver<MobileElement> getMobileBrowser() {
 		capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "Chrome");
 		capabilities.setCapability("deviceName", HubConfigManager.deviceName);
 		capabilities.setCapability("platformVersion", HubConfigManager.platformVersion);
@@ -106,7 +110,7 @@ public class GlobalUtil extends MobileKeywords {
 			URL url = new URL(HubConfigManager.appiumURL);
 			System.out.println(url);
 			while (2 > 1) {
-				Mdriver = new AndroidDriver<>(url, capabilities);
+				Mdriver = new AppiumDriver<>(url, capabilities);
 				break;
 			}
 		} catch (MalformedURLException e) {
@@ -287,11 +291,11 @@ public class GlobalUtil extends MobileKeywords {
 		return driver;
 	}
 
-	public static AndroidDriver<AndroidElement> getMDriver() {
+	public static AppiumDriver<MobileElement> getMDriver() {
 		return Mdriver;
 	}
 
-	public static void setMDriver(AndroidDriver<AndroidElement> driver) {
+	public static void setMDriver(AppiumDriver<MobileElement> driver) {
 		Mdriver = driver;
 	}
 

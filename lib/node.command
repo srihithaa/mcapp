@@ -1,0 +1,1 @@
+appium --nodeconfig /Users/damco/Desktop/git/mcapp/lib/nodeConfig_iOS.json

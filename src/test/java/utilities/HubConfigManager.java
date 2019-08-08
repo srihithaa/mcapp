@@ -24,7 +24,7 @@ import org.json.JSONObject;
  * @since Aug 1st 2019
  */
 public class HubConfigManager {
-	int hubPort = 1221;
+	int hubPort = 1223;
 	int nodePort = 4723;
 	public static String appiumURL;
 	public static String deviceName;
@@ -36,22 +36,51 @@ public class HubConfigManager {
 	public void main() {
 		String seleniumPath = System.getProperty("user.dir") + "/lib/selenium-server-standalone-3.2.0.jar";
 		if (!new File(seleniumPath).exists())
-			downloadFileFromInternet("https://selenium-release.storage.googleapis.com/3.2/selenium-server-standalone-3.2.0.jar", seleniumPath);
-		KeywordUtil.delay(3000);
+			downloadFileFromInternet(
+					"https://selenium-release.storage.googleapis.com/3.2/selenium-server-standalone-3.2.0.jar",
+					seleniumPath);
 		startSeleniumGrid();
-		HubConfigManager.appiumURL = updateJSON();
-		KeywordUtil.delay(5000);
-		hookMobileNodeToGrid();
+		// HubConfigManager.appiumURL = updateAndroidJSON();
+		HubConfigManager.appiumURL = updateiOSJSON();
+		KeywordUtil.delay(1000);
+		// hookAndroidNodeToGrid();
+		hookiOSNodeToGrid();
+
 		// To unlock Device use "adb shell input keyevent 224"
 	}
 
 	public void startSeleniumGrid() {
-		excCommandNewWindow("java -jar " + System.getProperty("user.dir")
-				+ "/lib/selenium-server-standalone-3.2.0.jar -role hub -port " + hubPort);
+		if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+			saveStringToFile(
+					"java -jar " + System.getProperty("user.dir")
+							+ "/lib/selenium-server-standalone-3.2.0.jar -role hub -port " + hubPort,
+					System.getProperty("user.dir") + "/lib/grid.command");
+			excCommandNewWindow("chmod +x " + System.getProperty("user.dir") + "/lib/grid.command");
+			excCommandNewWindow("open " + System.getProperty("user.dir") + "/lib/grid.command");
+		} else
+			excCommandNewWindow("java -jar " + System.getProperty("user.dir")
+					+ "/lib/selenium-server-standalone-3.2.0.jar -role hub -port " + hubPort);
 	}
 
-	public void hookMobileNodeToGrid() {
-		excCommandNewWindow("appium --nodeconfig " + System.getProperty("user.dir") + "/lib/node1_Config.json");
+	public void hookAndroidNodeToGrid() {
+		if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+			saveStringToFile("appium --nodeconfig " + System.getProperty("user.dir") + "/lib/nodeConfig_Android.json",
+					System.getProperty("user.dir") + "/lib/node.command");
+			excCommandNewWindow("chmod +x " + System.getProperty("user.dir") + "/lib/node.command");
+			excCommandNewWindow("open " + System.getProperty("user.dir") + "/lib/node.command");
+		} else
+			excCommandNewWindow(
+					"appium --nodeconfig " + System.getProperty("user.dir") + "/lib/nodeConfig_Android.json");
+	}
+
+	public void hookiOSNodeToGrid() {
+		if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+			saveStringToFile("appium --nodeconfig " + System.getProperty("user.dir") + "/lib/nodeConfig_iOS.json",
+					System.getProperty("user.dir") + "/lib/node.command");
+			excCommandNewWindow("chmod +x " + System.getProperty("user.dir") + "/lib/node.command");
+			excCommandNewWindow("open " + System.getProperty("user.dir") + "/lib/node.command");
+		} else
+			excCommandNewWindow("appium --nodeconfig " + System.getProperty("user.dir") + "/lib/nodeConfig_iOS.json");
 	}
 
 	public void downloadFileFromInternet(String fileURL, String filePathToSave) {
@@ -74,9 +103,9 @@ public class HubConfigManager {
 		}
 	}
 
-	public String updateJSON() {
+	public String updateAndroidJSON() {
 		String appiumURL = null;
-		String fileJSON = fileAsString(System.getProperty("user.dir") + "/lib/defaultNode.json");
+		String fileJSON = fileAsString(System.getProperty("user.dir") + "/lib/defaultAndroidNode.json");
 		JSONObject root = new JSONObject(fileJSON);
 		JSONArray capsArrayRoot = (JSONArray) root.get("capabilities");
 		JSONObject capsObj = (JSONObject) capsArrayRoot.get(0);
@@ -86,7 +115,7 @@ public class HubConfigManager {
 			capsObj.put("deviceName", readCmd("adb shell getprop ro.product.model"));
 		} catch (NullPointerException e) {
 			System.err.println(
-					"Looks like device is not connected/authorized. Please hook device to machine and retry....");
+					"Looks like Android device is not connected/authorized. Please hook device to machine and retry....");
 			System.exit(0);
 		}
 		deviceName = (String) capsObj.get("deviceName");
@@ -131,7 +160,67 @@ public class HubConfigManager {
 		if (!capsConfig.get("host").toString().isEmpty())
 			capsConfig.remove("host");
 		capsConfig.put("host", myIP);
-		saveStringToFile(root.toString(), System.getProperty("user.dir") + "/lib/node1_Config.json");
+		saveStringToFile(root.toString(), System.getProperty("user.dir") + "/lib/nodeConfig_Android.json");
+		return appiumURL;
+	}
+
+	public String updateiOSJSON() {
+		String appiumURL = null;
+		String fileJSON = fileAsString(System.getProperty("user.dir") + "/lib/defaultiOSNode.json");
+		JSONObject root = new JSONObject(fileJSON);
+		JSONArray capsArrayRoot = (JSONArray) root.get("capabilities");
+		JSONObject capsObj = (JSONObject) capsArrayRoot.get(0);
+		String deviceDetails = readCmd("xcrun instruments -s");
+		if (!capsObj.get("deviceName").toString().isEmpty())
+			capsObj.remove("deviceName");
+		if (deviceDetails.split("]")[2].contains("(Simulator)")) {
+			System.err.println("Looks like iOS device is not connected. Please hook device to Mac and retry....");
+			System.exit(0);
+		}
+		capsObj.put("deviceName", deviceDetails.split("]")[1].split(" ")[0]);
+		deviceName = (String) capsObj.get("deviceName");
+		if (!capsObj.get("platformVersion").toString().isEmpty())
+			capsObj.remove("platformVersion");
+		capsObj.put("platformVersion", deviceDetails.split("]")[1].split(" ")[1].replace("(", "").replace(")", ""));
+		platformVersion = (String) capsObj.get("platformVersion");
+		if (!capsObj.get("udid").toString().isEmpty())
+			capsObj.remove("udid");
+		capsObj.put("udid", deviceDetails.split("]")[1].split(" ")[2].replace("[", ""));
+		udid = (String) capsObj.get("udid");
+		if (!capsObj.get("app").toString().isEmpty())
+			capsObj.remove("app");
+		capsObj.put("app",
+				System.getProperty("user.dir").replace("\\", "/") + "/src/test/resources/APK/moneycontrol.ipa");
+		app = (String) capsObj.get("app");
+		InetAddress inetAddress;
+		String myIP = null;
+		try {
+			inetAddress = InetAddress.getLocalHost();
+			myIP = inetAddress.getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		JSONObject capsConfig = (JSONObject) root.get("configuration");
+		if (!capsConfig.get("hubPort").toString().isEmpty())
+			capsConfig.remove("hubPort");
+		capsConfig.put("hubPort", hubPort);
+		if (!capsConfig.get("port").toString().isEmpty())
+			capsConfig.remove("port");
+		capsConfig.put("port", nodePort);
+		if (!capsConfig.get("url").toString().isEmpty())
+			capsConfig.remove("url");
+		capsConfig.put("url", "http://" + myIP + ":" + nodePort + "/wd/hub");
+		appiumURL = (String) capsConfig.get("url");
+		if (!capsConfig.get("hub").toString().isEmpty())
+			capsConfig.remove("hub");
+		capsConfig.put("hub", "http://" + myIP + ":" + hubPort + "/grid/register");
+		if (!capsConfig.get("hubHost").toString().isEmpty())
+			capsConfig.remove("hubHost");
+		capsConfig.put("hubHost", myIP);
+		if (!capsConfig.get("host").toString().isEmpty())
+			capsConfig.remove("host");
+		capsConfig.put("host", myIP);
+		saveStringToFile(root.toString(), System.getProperty("user.dir") + "/lib/nodeConfig_iOS.json");
 		return appiumURL;
 	}
 
@@ -165,7 +254,11 @@ public class HubConfigManager {
 
 	public void excCommandNewWindow(String cmd) {
 		try {
-			Runtime.getRuntime().exec("cmd.exe /c start cmd /k " + cmd);
+			if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+				// String[] command = { "xterm", "-e", cmd };
+				Runtime.getRuntime().exec(cmd);
+			} else
+				Runtime.getRuntime().exec("cmd.exe /c start cmd /k " + cmd);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -174,13 +267,20 @@ public class HubConfigManager {
 	public static String readCmd(String cmd) {
 		String op = null;
 		try {
-			Process p = Runtime.getRuntime().exec(cmd);
+			Process p;
+			if (System.getProperty("os.name").toLowerCase().contains("mac"))
+				p = cmd.startsWith("adb")
+						? Runtime.getRuntime().exec("/Users/damco/Library/Android/sdk/platform-tools/" + cmd)
+						: Runtime.getRuntime().exec(cmd);
+			else
+				p = Runtime.getRuntime().exec(cmd);
 			BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line;
 			while ((line = input.readLine()) != null) {
 				op += line;
 			}
 			input.close();
+
 		} catch (Exception err) {
 			err.printStackTrace();
 		}

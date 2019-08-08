@@ -62,7 +62,7 @@ public class KeywordUtil extends GlobalUtil {
 				e.printStackTrace();
 			}
 		if (cucumberTagName.equals("Mobile") || cucumberTagName.equals("Web")) {
-			String htmlExtentReportFile = System.getProperty("user.dir") + "\\"
+			String htmlExtentReportFile = System.getProperty("user.dir")
 					+ ConfigReader.getValue("extentReportPath");
 			File extentReport = new File(htmlExtentReportFile);
 			if (extentReport.exists()) {

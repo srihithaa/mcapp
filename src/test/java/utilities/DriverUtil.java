@@ -1,5 +1,6 @@
 package utilities;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,13 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.remote.MobileCapabilityType;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import mobileutil.MobileKeywords;
 
 /**
  * This DriverUtil class refer to browsers, os details, browser versions and
@@ -28,11 +35,93 @@ public class DriverUtil {
 	public static final String CHROME = "Chrome";
 	private static Map<String, WebDriver> drivers = new HashMap<>();
 
-	public static final WebDriver driver = null;
+	public static WebDriver driver = null;
 	private static HashMap<String, String> checkLogin = new HashMap<>();
 	public static String appium_ip_address = mobileutil.MobileKeywords.getValue("appium_ip_address");
 	public static String appium_port = mobileutil.MobileKeywords.getValue("appium_port");
 	public static DesiredCapabilities capabilities = new DesiredCapabilities();
+
+	public static AppiumDriver<MobileElement> getMDriver(String osAppType) {
+
+		if (osAppType.contains("android")) {
+			if (osAppType.contains("wap"))
+				capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "Chrome");
+			else if (osAppType.contains("app")) {
+				capabilities.setCapability("appPackage", "com.divum.MoneyControl");
+				capabilities.setCapability("appActivity", "com.moneycontrol.handheld.SplashActivity");
+				capabilities.setCapability("app", "src/test/resources/APK/base.apk");
+			}
+			capabilities.setCapability(MobileCapabilityType.DEVICE_NAME,
+					GlobalUtil.getCommonSettings().getAndroidName());
+			// capabilities.setCapability(MobileCapabilityType.DEVICE_NAME,
+			// MobileKeywords.GetValue("ID"));
+			capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION,
+					GlobalUtil.getCommonSettings().getAndroidVersion());
+			capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobileKeywords.getValue("platformName"));
+			capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, MobileKeywords.getValue("automationName"));
+			capabilities.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, "180");
+			// capabilities.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT,MobileKeywords.GetValue("newCommandTimeout"));
+			WebDriverManager.chromedriver().setup();
+			// capabilities.setCapability("chromedriverExecutable",System.getProperty("user.dir")+"\\"+MobileKeywords.GetValue("AndroidChromeDriverPath"));
+			capabilities.setCapability("autoGrantPermissions", true);
+			capabilities.setCapability("autoAcceptAlerts", true);
+			// File app = new File(MobileKeywords.GetValue("apkFilePath"));
+			// capabilities.setCapability(MobileCapabilityType.APP,
+			// app.getAbsolutePath());
+			try {
+				driver = new AndroidDriver<MobileElement>(
+						new URL("http://" + appium_ip_address + ":" + appium_port + "/wd/hub"), capabilities);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		} else if (osAppType.contains("ios")) {
+			if (osAppType.contains("wap")) {
+				// capabilities.setCapability("startIWDP", true);
+				capabilities.setCapability("browserName", "safari");
+			} else if (osAppType.contains("app")) {
+				// capabilities.setCapability("bundleId",
+				// "com.moneycontrol.mc");
+				capabilities.setCapability("app", HubConfigManager.app);
+
+			}
+
+			capabilities.setCapability("platformName", "iOS");
+			capabilities.setCapability("automationName", "XCUITest");
+			capabilities.setCapability("platformVersion", HubConfigManager.platformVersion);
+
+			capabilities.setCapability("deviceName", HubConfigManager.deviceName);
+			// capabilities.setCapability(MobileCapabilityType.UDID,
+			// "A0F3B9DC-FD00-4ABB-8A21-C147D6EB55C7");
+			// iPhone 6
+			// capabilities.setCapability("udid",
+			// "9102ad41e57da789be9b78b3adc052fa934ab20f");
+			// iPhone 7+
+			// capabilities.setCapability("udid",
+			// "baa20051647a73a4196c92baa66e9d6619e6c74b");
+			// iPhone 8+
+			capabilities.setCapability("udid", HubConfigManager.udid);
+			// iPAD
+			// capabilities.setCapability("udid", "00008020-000961D926F1002E");
+
+			capabilities.setCapability("autoAcceptAlerts", true);
+			 capabilities.setCapability("updatedWDABundleId","com.facebooktx1234.WebDriverAgentRunner");
+
+			//capabilities.setCapability("xcodeOrgId", "Test TX");
+		//	 capabilities.setCapability("xcodeSigningId", "iPhone Developer");
+
+			// capabilities.setCapability("useNewWDA", true);
+			//capabilities.setCapability("xcodeConfigfile",
+				//	"/Applications/Appium.app/Contents/WebDriverAgent/WebDriverAgent.xcodeproj");
+			capabilities.setCapability("xcodeConfigfile","/Users/damco/.npm-global/lib/node_modules/appium/node_modules/appium-xcuitest-driver/WebDriverAgent/WebDriverAgent.xcodeproj");
+			 try {
+				driver = new IOSDriver<MobileElement>(new URL(HubConfigManager.appiumURL), capabilities);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
+		GlobalUtil.setDriver(driver);
+		return (AppiumDriver) driver;
+	}
 
 	/**
 	 * @param browserName,

@@ -26,11 +26,11 @@ import utilities.LogUtil;
 
 @CucumberOptions(
 
-		features = "classpath:webFeatures",
+		features = "src/test/resources/features/android",
 		// glue ={"classpath:step_definitons"},
 		plugin = { "pretty", "html:target/cucumber-html-report", "json:target/cucumber.json",
 				"com.cucumber.listener.ExtentCucumberFormatter:target/cucumber-reports/report.html" }, tags = {
-						"@Test211" }, dryRun = false, monochrome = true
+						"@ProfileLoginwithemail" }, dryRun = false, monochrome = true
 
 )
 public class RunCukesTest extends AbstractTestNGCucumberTests {
