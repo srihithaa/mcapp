@@ -3,6 +3,7 @@
 This document helps to configure MoneyControl automation framework in Windows machine.
 ## Pre-requisites
 The following list of software need to be installed as part of Money Control automation set-up:
+
 |Software Name|Versions|
 |---------------|---------|
 |[Java SDK](#java-sdk) |8 or later|
@@ -20,7 +21,7 @@ Refer [link](https://docs.oracle.com/javase/7/docs/webnotes/install/windows/jdk-
  - Click on **Clone a repository** button and login with your git credentials and select your forked version of MoneyControl Automation framework repo(Something looks like *<yourID>/TXMCFramework.git*)
  - Select appropriate local path(e.g., D:/git/) to where you want to clone the repository and click on **clone** button.
 
-### ![Eclipse IDE]
+### Eclipse IDE
 - From Eclipse [download page](https://www.eclipse.org/downloads), under "Get Eclipse Photon" ⇒ Click "Download Packages"
 - Choose the 4th(Eclipse IDE for Java Developers) and select appropriate system architecture version 32-bit/64-bit (e.g., "eclipse-java-photon-R-win32-x86_64.zip" 195MB) ⇒ Download
  - To install Eclipse, simply unzip the downloaded file into a directory of your choice (e.g., "C:\Eclipse")
